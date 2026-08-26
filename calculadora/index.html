@@ -4,26 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <title>Calculadora de Financiación</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #111111;
-    --panel: #1d1f25;
-    --panel-2: #23252c;
-    --gold: #c6a15b;
-    --gold-soft: rgba(198,161,91,0.14);
-    --cream: #f3efe6;
-    --muted: #9a9ba3;
-    --line: #33353d;
-    --danger: #c17a6b;
+    --ink: #111111;
+    --silver: #8A8A8A;
+    --card: #F3F3F3;
+    --line: #D8D8D8;
+    --danger: #b0212f;
+    --danger-bg: #fdf6f6;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background: var(--bg);
-    color: var(--cream);
-    font-family: 'Inter', sans-serif;
+    background: #ffffff;
+    color: var(--ink);
+    font-family: Arial, Helvetica, sans-serif;
     min-height:100vh;
     padding: 24px 16px 48px;
     -webkit-tap-highlight-color: transparent;
@@ -39,29 +34,29 @@
     text-transform: uppercase;
     letter-spacing: 0.14em;
     font-size: 11px;
-    color: var(--gold);
-    font-weight: 600;
+    color: var(--silver);
+    font-weight: 700;
     margin-bottom: 8px;
   }
   h1{
-    font-family: 'Playfair Display', serif;
+    font-family: "Century Schoolbook", Georgia, serif;
+    font-style: italic;
     font-weight: 700;
     font-size: clamp(26px, 7vw, 32px);
     margin: 0;
-    color: var(--cream);
+    color: var(--ink);
     letter-spacing: 0.01em;
     line-height: 1.15;
   }
   header.hero p{
-    color: var(--muted);
+    color: #4a4d52;
     font-size: 13.5px;
     margin: 10px 0 0;
     line-height: 1.5;
   }
   .disclaimer{
     font-size: 11.5px !important;
-    color: var(--muted);
-    opacity: 0.8;
+    color: var(--silver);
     font-style: italic;
     border-top: 1px dashed var(--line);
     padding-top: 12px;
@@ -69,22 +64,23 @@
   }
 
   .card{
-    background: var(--panel);
+    background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 14px;
+    border-radius: 8px;
     padding: 20px;
     margin-bottom: 16px;
   }
 
   .card h2{
-    font-family: 'Playfair Display', serif;
+    font-family: "Century Schoolbook", Georgia, serif;
+    font-style: italic;
     font-size: 18px;
     margin: 0 0 4px;
-    font-weight: 600;
+    font-weight: 700;
   }
   .card .sub{
     font-size: 12.5px;
-    color: var(--muted);
+    color: var(--silver);
     margin: 0 0 20px;
   }
 
@@ -92,15 +88,16 @@
   .field:last-of-type{margin-bottom: 0;}
   .field label{
     display:block;
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     margin-bottom: 7px;
-    letter-spacing: 0.02em;
   }
   .field .hint{
     font-size: 11.5px;
-    color: var(--muted);
+    color: var(--silver);
     margin-top: 6px;
     line-height: 1.4;
   }
@@ -108,19 +105,19 @@
     position: relative;
     display:flex;
     align-items:center;
-    background: var(--bg);
+    background: #ffffff;
     border: 1px solid var(--line);
-    border-radius: 10px;
+    border-radius: 6px;
     transition: border-color .15s ease, box-shadow .15s ease;
   }
   .input-row:focus-within{
-    border-color: var(--gold);
-    box-shadow: 0 0 0 3px var(--gold-soft);
+    border-color: var(--ink);
+    box-shadow: 0 0 0 3px rgba(17,17,17,0.08);
   }
   .input-row .prefix{
     padding: 0 4px 0 14px;
-    color: var(--muted);
-    font-family: 'IBM Plex Mono', monospace;
+    color: var(--silver);
+    font-family: 'Courier New', monospace;
     font-size: 15px;
   }
   .input-row input{
@@ -128,8 +125,8 @@
     background: transparent;
     border: none;
     outline: none;
-    color: var(--cream);
-    font-family: 'IBM Plex Mono', monospace;
+    color: var(--ink);
+    font-family: 'Courier New', monospace;
     /* 16px+ to prevent iOS auto-zoom on focus */
     font-size: 16px;
     padding: 15px 14px 15px 8px;
@@ -143,7 +140,7 @@
   }
   .input-row .suffix{
     padding: 0 14px 0 4px;
-    color: var(--muted);
+    color: var(--silver);
     font-size: 13px;
     white-space: nowrap;
   }
@@ -156,8 +153,8 @@
     background: transparent;
     border: none;
     outline: none;
-    color: var(--cream);
-    font-family: 'IBM Plex Mono', monospace;
+    color: var(--ink);
+    font-family: 'Courier New', monospace;
     font-size: 16px;
     padding: 15px 40px 15px 14px;
     cursor: pointer;
@@ -166,8 +163,8 @@
     appearance: none;
   }
   .select-row select option{
-    background: var(--panel);
-    color: var(--cream);
+    background: #ffffff;
+    color: var(--ink);
   }
   .select-row .chev{
     position: absolute;
@@ -179,28 +176,29 @@
 
   button.calc{
     width: 100%;
-    background: var(--gold);
-    color: #201a0e;
+    background: var(--ink);
+    color: #ffffff;
     border: none;
-    border-radius: 10px;
+    border-radius: 6px;
     padding: 16px 18px;
     font-weight: 700;
-    font-size: 15px;
-    letter-spacing: 0.02em;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     cursor: pointer;
     margin-top: 4px;
     transition: transform .12s ease, filter .12s ease;
   }
-  button.calc:active{ transform: scale(0.98); filter: brightness(1.08); }
+  button.calc:active{ transform: scale(0.98); filter: brightness(1.15); }
 
   .err{
     display:none;
-    background: rgba(193,122,107,0.12);
-    border: 1px solid rgba(193,122,107,0.4);
+    background: var(--danger-bg);
+    border: 1px solid rgba(176,33,47,0.35);
     color: var(--danger);
     font-size: 12.5px;
     padding: 10px 12px;
-    border-radius: 8px;
+    border-radius: 6px;
     margin-top: 14px;
   }
 
@@ -210,9 +208,9 @@
     margin-bottom: 16px;
   }
   .stat{
-    background: var(--panel-2);
-    border: 1px solid var(--line);
-    border-radius: 12px;
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    border-radius: 8px;
     padding: 16px 18px;
     display:flex;
     align-items:center;
@@ -222,19 +220,19 @@
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--muted);
+    color: #b8b8b8;
   }
   .stat .value{
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Courier New', monospace;
     font-size: 20px;
-    font-weight: 600;
-    color: var(--gold);
+    font-weight: 700;
+    color: #ffffff;
   }
 
   .table-card{
-    background: var(--panel);
+    background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 14px;
+    border-radius: 8px;
     padding: 6px;
     overflow: hidden;
   }
@@ -247,19 +245,19 @@
   table{
     width: 100%;
     border-collapse: collapse;
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Courier New', monospace;
     font-size: 14px;
   }
   thead th{
     position: sticky;
     top: 0;
-    background: var(--panel-2);
-    color: var(--gold);
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
+    background: var(--card);
+    color: var(--ink);
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
-    font-size: 11px;
+    letter-spacing: 0.06em;
+    font-size: 10.5px;
     padding: 12px 16px;
     text-align: right;
     border-bottom: 1px solid var(--line);
@@ -270,20 +268,22 @@
     padding: 12px 16px;
     text-align: right;
     border-bottom: 1px solid var(--line);
-    color: var(--cream);
+    color: var(--ink);
+    background: #ffffff;
   }
   tbody td:first-child{
     text-align: left;
-    color: var(--muted);
-    font-family: 'Inter', sans-serif;
+    color: var(--silver);
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 13px;
   }
-  tbody tr.period-0 td{ color: var(--muted); font-style: italic; }
+  tbody tr.period-0 td{ color: var(--silver); font-style: italic; }
   tfoot td{
     padding: 16px;
     font-weight: 700;
-    color: var(--gold);
-    border-top: 2px solid var(--line);
+    color: var(--ink);
+    background: var(--card);
+    border-top: 2px solid var(--ink);
     text-align: right;
     font-size: 14.5px;
   }
@@ -294,7 +294,7 @@
     align-items:center;
     justify-content:center;
     min-height: 160px;
-    color: var(--muted);
+    color: var(--silver);
     font-size: 13px;
     text-align:center;
     padding: 30px 20px;
@@ -303,7 +303,7 @@
 
   footer{
     text-align:center;
-    color: var(--muted);
+    color: var(--silver);
     font-size: 11px;
     margin-top: 28px;
     line-height: 1.5;
@@ -348,7 +348,7 @@
           <option value="1.7" selected>1,7 %</option>
           <option value="0">0 % (sin interés)</option>
         </select>
-        <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9a9ba3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8A8A8A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </div>
     </div>
 
@@ -366,7 +366,7 @@
 
   <div class="results" id="results">
     <div class="table-card">
-      <div class="placeholder">Completa los datos y presiona <b style="color:var(--gold); margin:0 4px;">Calcular</b> para ver la tabla de amortización.</div>
+      <div class="placeholder">Completa los datos y presiona <b style="color:#111111; margin:0 4px;">Calcular</b> para ver la tabla de amortización.</div>
     </div>
   </div>
 
