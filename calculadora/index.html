@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Calculadora de Financiación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #111111;
+    --panel: #1d1f25;
+    --panel-2: #23252c;
+    --gold: #c6a15b;
+    --gold-soft: rgba(198,161,91,0.14);
+    --cream: #f3efe6;
+    --muted: #9a9ba3;
+    --line: #33353d;
+    --danger: #c17a6b;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    min-height:100vh;
+    padding: 24px 16px 48px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wrap{max-width: 640px; margin: 0 auto;}
+
+  header.hero{
+    padding-bottom: 20px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow{
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  h1{
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(26px, 7vw, 32px);
+    margin: 0;
+    color: var(--cream);
+    letter-spacing: 0.01em;
+    line-height: 1.15;
+  }
+  header.hero p{
+    color: var(--muted);
+    font-size: 13.5px;
+    margin: 10px 0 0;
+    line-height: 1.5;
+  }
+  .disclaimer{
+    font-size: 11.5px !important;
+    color: var(--muted);
+    opacity: 0.8;
+    font-style: italic;
+    border-top: 1px dashed var(--line);
+    padding-top: 12px;
+    margin-top: 14px !important;
+  }
+
+  .card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .card h2{
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    margin: 0 0 4px;
+    font-weight: 600;
+  }
+  .card .sub{
+    font-size: 12.5px;
+    color: var(--muted);
+    margin: 0 0 20px;
+  }
+
+  .field{margin-bottom: 16px;}
+  .field:last-of-type{margin-bottom: 0;}
+  .field label{
+    display:block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 7px;
+    letter-spacing: 0.02em;
+  }
+  .field .hint{
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+  .input-row{
+    position: relative;
+    display:flex;
+    align-items:center;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .input-row:focus-within{
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px var(--gold-soft);
+  }
+  .input-row .prefix{
+    padding: 0 4px 0 14px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+  }
+  .input-row input{
+    flex:1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--cream);
+    font-family: 'IBM Plex Mono', monospace;
+    /* 16px+ to prevent iOS auto-zoom on focus */
+    font-size: 16px;
+    padding: 15px 14px 15px 8px;
+    width: 100%;
+    -moz-appearance: textfield;
+  }
+  .input-row input::-webkit-outer-spin-button,
+  .input-row input::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .input-row .suffix{
+    padding: 0 14px 0 4px;
+    color: var(--muted);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  /* Desplegable de tasa de interés */
+  .select-row{ position: relative; }
+  .select-row select{
+    flex: 1;
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--cream);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 16px;
+    padding: 15px 40px 15px 14px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  .select-row select option{
+    background: var(--panel);
+    color: var(--cream);
+  }
+  .select-row .chev{
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  button.calc{
+    width: 100%;
+    background: var(--gold);
+    color: #201a0e;
+    border: none;
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: transform .12s ease, filter .12s ease;
+  }
+  button.calc:active{ transform: scale(0.98); filter: brightness(1.08); }
+
+  .err{
+    display:none;
+    background: rgba(193,122,107,0.12);
+    border: 1px solid rgba(193,122,107,0.4);
+    color: var(--danger);
+    font-size: 12.5px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-top: 14px;
+  }
+
+  .summary-grid{
+    display:grid;
+    grid-template-columns: 1fr;
+    margin-bottom: 16px;
+  }
+  .stat{
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .stat .label{
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .stat .value{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  .table-card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 6px;
+    overflow: hidden;
+  }
+  .table-scroll{
+    overflow-x: auto;
+    max-height: 60vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  table{
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+  }
+  thead th{
+    position: sticky;
+    top: 0;
+    background: var(--panel-2);
+    color: var(--gold);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 11px;
+    padding: 12px 16px;
+    text-align: right;
+    border-bottom: 1px solid var(--line);
+    z-index: 1;
+  }
+  thead th:first-child{ text-align: left; }
+  tbody td{
+    padding: 12px 16px;
+    text-align: right;
+    border-bottom: 1px solid var(--line);
+    color: var(--cream);
+  }
+  tbody td:first-child{
+    text-align: left;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+  }
+  tbody tr.period-0 td{ color: var(--muted); font-style: italic; }
+  tfoot td{
+    padding: 16px;
+    font-weight: 700;
+    color: var(--gold);
+    border-top: 2px solid var(--line);
+    text-align: right;
+    font-size: 14.5px;
+  }
+  tfoot td:first-child{ text-align: left; }
+
+  .placeholder{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height: 160px;
+    color: var(--muted);
+    font-size: 13px;
+    text-align:center;
+    padding: 30px 20px;
+    line-height: 1.5;
+  }
+
+  footer{
+    text-align:center;
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 28px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Financiación a plazos</div>
+    <h1>Calculadora de amortización</h1>
+    <p>Ingresa las condiciones del crédito y genera la tabla de cuotas mes a mes.</p>
+    <p class="disclaimer">Esta herramienta es una calculadora de referencia. Los valores mostrados son aproximados y no reemplazan las condiciones, tasas y montos establecidos en los documentos firmados del crédito.</p>
+  </header>
+
+  <div class="card">
+    <h2>Condiciones del crédito</h2>
+    <p class="sub">Completa los datos base para calcular el plan de pagos.</p>
+
+    <div class="field">
+      <label for="valor">Valor del crédito</label>
+      <div class="input-row">
+        <span class="prefix">$</span>
+        <input type="text" inputmode="numeric" id="valor" value="2.000.000">
+        <span class="suffix">COP</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="plazo">Plazo</label>
+      <div class="input-row">
+        <input type="number" inputmode="numeric" min="1" step="1" id="plazo" value="12">
+        <span class="suffix">meses</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="interes">Interés mensual</label>
+      <div class="input-row select-row">
+        <select id="interes">
+          <option value="1.7" selected>1,7 %</option>
+          <option value="0">0 % (sin interés)</option>
+        </select>
+        <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9a9ba3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+    </div>
+
+    <div class="field" id="graceField">
+      <label for="graceMonth">Interés a partir del mes</label>
+      <div class="input-row">
+        <input type="number" inputmode="numeric" min="1" step="1" id="graceMonth" value="1">
+      </div>
+      <div class="hint">Mes desde el cual empieza a cobrarse interés (1 = desde la primera cuota).</div>
+    </div>
+
+    <button class="calc" onclick="calcular(true)">Calcular tabla de pagos</button>
+    <div class="err" id="errBox"></div>
+  </div>
+
+  <div class="results" id="results">
+    <div class="table-card">
+      <div class="placeholder">Completa los datos y presiona <b style="color:var(--gold); margin:0 4px;">Calcular</b> para ver la tabla de amortización.</div>
+    </div>
+  </div>
+
+  <footer>Sistema de amortización a cuota de capital constante — el interés se calcula mes a mes sobre el saldo pendiente.</footer>
+</div>
+
+<script>
+function parseNumberInput(str){
+  if(typeof str !== 'string') return NaN;
+  const cleaned = str.replace(/[^\d.,-]/g,'').replace(/\./g,'').replace(/,/g,'.');
+  return parseFloat(cleaned);
+}
+
+function formatCOP(n){
+  const rounded = Math.round(n);
+  return '$' + rounded.toLocaleString('es-CO');
+}
+
+// live thousands formatting for the valor field
+const valorInput = document.getElementById('valor');
+valorInput.addEventListener('input', (e)=>{
+  const cursorFromEnd = e.target.value.length - e.target.selectionStart;
+  let digits = e.target.value.replace(/[^\d]/g,'');
+  if(digits === ''){ e.target.value = ''; return; }
+  let num = parseInt(digits, 10);
+  e.target.value = num.toLocaleString('es-CO');
+  const newPos = e.target.value.length - cursorFromEnd;
+  e.target.setSelectionRange(newPos, newPos);
+});
+
+function showError(msg){
+  const box = document.getElementById('errBox');
+  box.textContent = msg;
+  box.style.display = 'block';
+}
+function clearError(){
+  const box = document.getElementById('errBox');
+  box.style.display = 'none';
+  box.textContent = '';
+}
+
+function calcular(scrollToResults){
+  clearError();
+
+  const valor = parseNumberInput(valorInput.value);
+  const plazo = parseInt(document.getElementById('plazo').value, 10);
+  const interesPct = parseFloat(document.getElementById('interes').value);
+  const graceMonth = parseInt(document.getElementById('graceMonth').value, 10) || 1;
+
+  if(!valor || valor <= 0){ showError('Ingresa un valor de crédito válido.'); return; }
+  if(!plazo || plazo < 1){ showError('El plazo debe ser de al menos 1 mes.'); return; }
+  if(isNaN(interesPct) || interesPct < 0){ showError('Ingresa una tasa de interés válida.'); return; }
+
+  const rate = interesPct / 100;
+  const amortizacion = valor / plazo;
+
+  const rows = [];
+  rows.push({ periodo: 0, diferido: valor, totalPagar: 0 });
+
+  let saldoAnterior = valor;
+  let totalInteres = 0;
+  let totalPagar = 0;
+
+  for(let p = 1; p <= plazo; p++){
+    const saldo = saldoAnterior;
+    const interes = (p >= graceMonth) ? saldo * rate : 0;
+    const cuota = amortizacion;
+    let diferido = saldo - cuota;
+    if(Math.abs(diferido) < 0.005) diferido = 0;
+    const totalMes = interes + cuota;
+
+    rows.push({ periodo: p, totalPagar: totalMes });
+
+    totalInteres += interes;
+    totalPagar += totalMes;
+    saldoAnterior = diferido;
+  }
+
+  const cuotaPromedio = (valor + totalInteres) / plazo;
+
+  renderResults({ cuotaPromedio, totalPagar, rows });
+
+  if(scrollToResults === true){
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function renderResults(data){
+  const { cuotaPromedio, totalPagar, rows } = data;
+
+  let html = '';
+
+  html += '<div class="summary-grid">';
+  html += '<div class="stat"><div class="label">Cuota promedio</div><div class="value">'+formatCOP(cuotaPromedio)+'</div></div>';
+  html += '</div>';
+
+  html += '<div class="table-card"><div class="table-scroll"><table>';
+  html += '<thead><tr><th>Periodo</th><th>Total a pagar mes</th></tr></thead><tbody>';
+
+  rows.forEach(r => {
+    if(r.periodo === 0){
+      html += '<tr class="period-0"><td>0</td><td>'+formatCOP(0)+'</td></tr>';
+    } else {
+      html += '<tr><td>'+r.periodo+'</td><td>'+formatCOP(r.totalPagar)+'</td></tr>';
+    }
+  });
+
+  html += '</tbody><tfoot><tr><td>Total</td><td>'+formatCOP(totalPagar)+'</td></tr></tfoot>';
+  html += '</table></div></div>';
+
+  document.getElementById('results').innerHTML = html;
+}
+
+// mostrar/ocultar el campo de mes de gracia según la tasa seleccionada
+const interesSelect = document.getElementById('interes');
+function actualizarCampoGracia(){
+  const sinInteres = parseFloat(interesSelect.value) === 0;
+  document.getElementById('graceField').style.display = sinInteres ? 'none' : '';
+}
+interesSelect.addEventListener('change', ()=>{
+  actualizarCampoGracia();
+  calcular(false);
+});
+actualizarCampoGracia();
+
+// run once on load with default example values (sin scroll)
+calcular(false);
+
+// asegurar que la página siempre inicie arriba
+if('scrollRestoration' in history){ history.scrollRestoration = 'manual'; }
+window.addEventListener('load', function(){ window.scrollTo(0, 0); });
+</script>
+</body>
+</html>
