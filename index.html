@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Solicitud de Crédito Sterling</title>
+<title>Actualización de Datos · Crédito Sterling</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -400,14 +400,13 @@ button{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transfor
 .regsign .sigs{margin-top:16px}
 .regsign .sigline .ln{height:34px}
 </style>
-
 <div class="masthead">
   <div class="masthead-in">
     <div class="brand">
       <div class="wordmark">Sterling</div>
       <div class="rule"></div>
-      <h1>Solicitud de Crédito Sterling</h1>
-      <p>Complete sus datos para solicitar su Crédito Sterling. Toma unos minutos y al terminar recibirá su número de radicado.</p>
+      <h1>Actualización de Datos</h1>
+      <p>Actualice su información de contacto, laboral, familiar y financiera para mantener al día su Crédito Sterling. Toma unos minutos.</p>
     </div>
     <div class="cardwrap">
       <div class="silvercard">
@@ -423,24 +422,12 @@ button{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transfor
           </div>
           <div class="cardfoot">
             <span class="exp">EXP 00/00</span>
-            <span id="cardStore">Punto de venta</span>
+            <span>Actualización de datos</span>
           </div>
         </div>
       </div>
-      <div class="cardnote">Vista previa · su nombre aparecerá en la tarjeta</div>
+      <div class="cardnote">Vista previa · su nombre aparecerá aquí</div>
     </div>
-  </div>
-</div>
-
-<div class="benefits">
-  <div class="benefits-in">
-    <div class="lead"><em>10%</em> off por apertura de cuenta <span class="only">Solo en Sterling</span></div>
-    <ul>
-      <li>Sin cuota de manejo</li>
-      <li>Entrega inmediata de la mercancía</li>
-      <li>Extracto mensual de su cuenta</li>
-      <li>Mayores descuentos en promociones</li>
-    </ul>
   </div>
 </div>
 
@@ -454,44 +441,16 @@ button{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transfor
 <main>
   <form id="app" novalidate></form>
 
-  <div class="reg">
-    <header>
-      <h2>Reglamento y condiciones</h2>
-      <span class="hint">Léalo antes de marcar las autorizaciones</span>
-    </header>
-    <div class="regbox" id="regBox" tabindex="0"></div>
-    <div class="regfoot">
-      <span id="regStatus">Desplace para leer el reglamento completo</span>
-      <button type="button" class="reglink" id="regTop">Volver al inicio</button>
-    </div>
-  </div>
-
   <div class="consent">
-    <header><h2>Declaración y autorizaciones</h2></header>
+    <header><h2>Autorización</h2></header>
     <div class="body">
       <p class="legal" id="legalText"></p>
 
-      <div class="check" id="wrap_ackReglamento">
-        <input type="checkbox" id="ackReglamento" data-consent>
+      <div class="check" id="wrap_ackAutorizacion">
+        <input type="checkbox" id="ackAutorizacion" data-consent>
         <span class="txt">
-          <label for="ackReglamento">Declaro haber leído y comprendido el reglamento y condiciones del Crédito Sterling que aparece arriba, y acepto sus términos.</label>
-          <small>Obligatorio. El texto completo queda anexo en el PDF de su solicitud.</small>
-        </span>
-      </div>
-
-      <div class="check" id="wrap_ackCredito">
-        <input type="checkbox" id="ackCredito" data-consent>
-        <span class="txt">
-          <label for="ackCredito">Autorizo de manera previa, expresa e informada a Sterling de Colombia S.A. a consultar, solicitar, reportar y actualizar mi información financiera y crediticia ante centrales de información y operadores de riesgo.</label>
-          <small>Obligatorio. Incluye el tratamiento de mis datos personales conforme a la Ley 1581 de 2012 y a la política de tratamiento de datos de la compañía.</small>
-        </span>
-      </div>
-
-      <div class="check">
-        <input type="checkbox" id="ackComercial">
-        <span class="txt">
-          <label for="ackComercial">Autorizo el envío de información comercial y promocional de las marcas del grupo.</label>
-          <small>Opcional.</small>
+          <label for="ackAutorizacion">Autorizo el tratamiento de mis datos para que Sterling, de manera individual o conjunta con terceros, me ofrezca sus productos y servicios y los de terceros, y me envíe información propia o de terceros de carácter comercial, financiero, de productos y servicios, a mi correo electrónico, aplicaciones de mensajería para teléfono inteligente y/o cualquier otro mecanismo de contacto.</label>
+          <small>Obligatorio. Para que esta actualización quede registrada es indispensable su firma; el PDF generado queda listo para firmarse.</small>
         </span>
       </div>
     </div>
@@ -507,7 +466,7 @@ button{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transfor
 </main>
 
 <div class="actions">
-  <button type="button" class="btn-primary" id="btnSend">Enviar mi solicitud</button>
+  <button type="button" class="btn-primary" id="btnSend">Enviar actualización</button>
   <button type="button" class="btn-ghost" id="btnRetry" hidden>Reintentar envío</button>
   <button type="button" class="btn-ghost" id="btnClear">Limpiar formulario</button>
   <div class="spacer"></div>
@@ -517,188 +476,78 @@ button{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transfor
 
 <script>
 /* ==================================================================
-   CONFIGURACIÓN — lo único que hay que editar
-   endpoint : URL del Web App de Google Apps Script (termina en /exec)
-   token    : la misma clave que puso en el script. Cámbiela.
+   CONFIGURACIÓN — se completa cuando el Worker de Actualización
+   esté desplegado en Cloudflare (ver instructivo del proyecto).
+   endpoint : URL del Worker (termina en .workers.dev o dominio propio)
+   token    : la misma clave que se ponga en el Worker como secreto TOKEN
 ================================================================== */
 const CONFIG = {
-  endpoint: 'https://solicitudes-sterling.shy-lab-614c.workers.dev',
-  token: 'sterling-retiro-2026-QpT4vN8mKa'
+  endpoint: 'https://actualizaciones-sterling.shy-lab-614c.workers.dev/',
+  token: 'sterling-actualizacion-2026-PrRHveW49k' // debe ser IDÉNTICO al secreto TOKEN del Worker
 };
 
 /* ------------------------------------------------------------------
-   Estructura del formulario — refleja la solicitud impresa
+   Texto de autorización — transcrito del formulario impreso
+   "Actualización de Datos". Revisar redacción con jurídico si aplica.
 ------------------------------------------------------------------ */
-const LEGAL = "Los datos aquí consignados son verdaderos y se dan con el objeto de que Sterling de Colombia S.A. financie la compra de los productos que deseo adquirir, sujeta dicha financiación a las condiciones y términos que para dichos efectos ha establecido Sterling de Colombia S.A. en el reglamento vigente. En constancia de haber leído y comprendido el alcance de dicho reglamento y aceptando los términos y condiciones del mismo, firmo la presente solicitud.";
+const LEGAL = "Esta actualización sustituye la información previamente registrada por el titular en su Tarjeta Sterling.";
+
+const AUTORIZACION_TEXTO = "Autorizo el tratamiento de mis datos para que Sterling, de manera individual o conjunta con terceros, me ofrezca sus productos y servicios y los de terceros, y me envíe información propia o de terceros de carácter comercial, financiero, de productos y servicios, a mi correo electrónico, aplicaciones de mensajería para teléfono inteligente y/o cualquier otro mecanismo de contacto.";
 
 /* ------------------------------------------------------------------
-   Reglamento y condiciones — texto oficial
+   Especificación de campos — refleja el formulario impreso
+   "Actualización de Datos"
 ------------------------------------------------------------------ */
-const REGLAMENTO_TITULO = 'Reglamento y condiciones del crédito rotativo y de la Tarjeta otorgados por Sterling de Colombia S.A.';
-
-const REGLAMENTO = [
-"1. Por virtud de la solicitud digital diligenciada por el solicitante y de su aceptación por parte de Sterling de Colombia S.A., en adelante Sterling, podrá expedir a su arbitrio, al solicitante, una Tarjeta Sterling, caso en el cual el tarjetahabiente adquiere los derechos y acepta las obligaciones establecidas en el presente reglamento, el cual se anexa a la solicitud y cuyo texto declara conocer.",
-"2. Cuando haya causal válida Sterling podrá modificar las condiciones del presente reglamento, debiendo previamente comunicar la decisión por escrito al titular de la tarjeta.",
-"3. Sterling se reserva el derecho de suspender o cancelar la tarjeta y exigir su inmediata devolución al tarjetahabiente. El tarjetahabiente podrá igualmente solicitar la cancelación de su tarjeta de crédito, hallándose a paz y salvo con Sterling, para lo cual deberá remitir la correspondiente comunicación y restituir la tarjeta recibida.",
-"4. Con la tarjeta otorgada por Sterling el tarjetahabiente podrá adquirir bienes en todos los almacenes de Sterling de Colombia S.A. y en aquellos que Sterling estipule, hasta por la cantidad que en forma de crédito rotativo determine Sterling.",
-"5. Para poder efectuar adquisiciones al amparo de la tarjeta Sterling, esta debe ser presentada por el tarjetahabiente, quien firmará en cada caso, de manera física o electrónica, previa verificación de su cuantía, el respectivo comprobante de crédito y factura de compraventa y se identificará plenamente ante el almacén que se lo solicite.",
-"6. Sterling mensualmente enviará a los tarjetahabientes un \u201cExtracto\u201d a su última dirección registrada, mediante la cual liquidará de acuerdo con las condiciones de la adquisición, las sumas que resulte a deberle el tarjetahabiente por capital e intereses, las cuales debe cancelar sin lugar a requerimientos dentro de los plazos y condiciones fijados en aquel.",
-"7. El tarjetahabiente se obligará a pagar a Sterling el monto total de las adquisiciones efectuadas con la utilización de la tarjeta. Si desea acogerse a los plazos que concede Sterling, DEBERÁ cancelar por lo menos el valor que para tal efecto se indique en el \u201cExtracto\u201d, pago que será exigible en la \u201cFecha de Facturación\u201d allí indicada. Sin embargo, el pago se puede realizar hasta la fecha \u201cpague antes del\u201d, caso contrario se causarán intereses de mora desde la \u201cFecha de Facturación\u201d hasta el día en el que el tarjetahabiente pague su cuenta, liquidados a la tasa autorizada por la Superintendencia Bancaria para esa modalidad.",
-"8. La mora en el pago de los saldos a cargo del tarjetahabiente, además de los intereses previstos en la cláusula anterior, faculta a Sterling para declarar vencidos los plazos y exigir la cancelación inmediata de todas las sumas a cargo del tarjetahabiente.",
-"9. En el evento que el tarjetahabiente no reciba oportunamente el \u201cExtracto\u201d, este queda obligado a reclamarlo por intermedio de cualquiera de los almacenes de Sterling, sin que por ningún motivo pueda alegar su no recibo como causa de incumplimiento.",
-"10. Para adelantar los correspondientes procesos de cobro judicial, bastará con la presentación del respectivo pagaré.",
-"11. El recibo de la Tarjeta Sterling impone la obligación de firmarla inmediatamente y de custodiarla de modo que ninguna otra persona pueda hacer uso de ella, y por lo tanto el usuario asume el riesgo ante Sterling, hasta la culpa leve por cualquier compra o uso indebido que de ella se haga, a causa de negligencia o descuido en la obligación de custodia esmerada que adquiere.",
-"12. La tarjeta es de propiedad de Sterling y el tarjetahabiente se obliga a devolverla en el momento que aquella se solicite. En caso de extravío, hurto o robo de la misma, el tarjetahabiente se obliga a formular la denuncia correspondiente ante la autoridad competente y dar aviso escrito inmediatamente a las oficinas de Sterling. De no hacerlo así, responderá ante Sterling y asumirá como deuda a su cargo todas las adquisiciones o compras que se hagan con la tarjeta extraviada, hurtada o robada. La responsabilidad del tarjetahabiente cesa a partir del momento de recibo del aviso escrito a Sterling acompañado de la copia de la correspondiente denuncia.",
-"13. El tarjetahabiente adquiere la obligación de registrar su dirección y domicilio y a notificar por escrito a Sterling todo cambio al respecto, y cuando se ausente temporal o definitivamente, y quiera continuar con los pagos a plazos, tendrá que informar con la debida anticipación, la persona y dirección a quien deben presentarse los \u201cExtractos\u201d para su pago.",
-"14. La entrega de la tarjeta se hace en consideración a las condiciones personales de su titular y en consecuencia este no la podrá ceder por ningún motivo ni hacerse sustituir por terceros en el ejercicio de los derechos que la tarjeta otorga.",
-"15. Sterling podrá cancelar anticipadamente la tarjeta o no renovarla, decisión que hará de plazo vencido la totalidad de las deudas a cargo del tarjetahabiente que se encuentren pendientes de pago, e impone la obligación de devolver inmediatamente la tarjeta, en caso de incurrir en cualquiera de los siguientes eventos: a) Incumplimiento o violación de cualquiera de las obligaciones contraídas. b) No pago dentro de los términos y condiciones consignados en el \u201cExtracto\u201d de cualquier suma o cuota que se esté adeudando. c) Si se utiliza la tarjeta para fines no previstos o en cuantía superior al límite autorizado por Sterling. d) El giro de cheques que el Banco librado no pague por cualquier causa. e) Cuando le sea cancelada cualquiera de las tarjetas de crédito que posea. f) En el caso que le sea cancelada su cuenta corriente bancaria por cualquier motivo. g) En el caso que el tarjetahabiente sea demandado judicialmente o le sean embargados bienes por cualquier acción. h) Por muerte del tarjetahabiente.",
-"16. En caso de que una misma Tarjeta Sterling se expida para ser usada por dos (2) o más personas, cada una de ellas se compromete de manera solidaria con los demás usuarios de la misma tarjeta a pagar el importe correspondiente a las compras y demás erogaciones hechas, de manera que STERLING DE COLOMBIA S.A. podrá cobrar a su elección a todos o cada uno de los usuarios de la misma tarjeta, por lo tanto la suscripción del presente contrato equivale a la suscripción del pagaré que se expide cada vez que se efectúe una compra.",
-"17. STERLING DE COLOMBIA S.A., identificado con Nit. 860.048.245-5 y con domicilio en la carrera 19 No. 82-85 P 8 de la ciudad de Bogotá D.C., recolecta, almacena, usa y circula datos personales; requiere obtener su consentimiento para que, de manera libre, previa, expresa, voluntaria, inequívoca y debidamente informada, autorice la recolección, registro, almacenamiento, uso, circulación, supresión, procesamiento, compilación, intercambio, actualización, y disposición de los datos personales que sean suministrados y que se incorporen en las distintas bases de datos, o en repositorios electrónicos de todo tipo. Los datos personales solicitados por STERLING DE COLOMBIA S.A. corresponden exclusivamente a aquellos que resultan pertinentes, necesarios y adecuados para el desarrollo de las finalidades previamente informadas en la Política de Protección de Datos Personales, y las directamente relacionadas con su solicitud de la Tarjeta STERLING y/o crédito rotativo; motivo por el cual, le solicitamos su autorización con las siguientes finalidades específicas:"
-];
-
-const REGLAMENTO_FINALIDADES = [
-"Conocer y consultar la información del Titular del dato que reposen en bases de datos de operadores de Centrales de riesgo, referente a su información Financiera, Comercial y Crediticia.",
-"Consultar información relacionada con la liquidación o pago de aportes al sistema de seguridad social y parafiscales (presente, pasado y futura).",
-"Consultar información relacionada con los derechos y obligaciones originados en virtud de cualquier contrato celebrado u operación que haya llegado o llegare a celebrar o realizar.",
-"Consultar multas y sanciones ante las diferentes autoridades administrativas y judiciales.",
-"Consultar información sobre activos, bienes o derechos en entidades públicas o privadas, que se encuentren en buscadores públicos, redes sociales o publicaciones físicas o electrónicas, bien fuere en Colombia o en el exterior."
-];
-
-const REGLAMENTO_CIERRE = [
-"STERLING DE COLOMBIA S.A. pone de presente que los datos aquí recolectados se emplean en el respeto de los derechos consagrados en la legislación colombiana y en especial a la Constitución y la Ley 1581 de 2012 y demás Decretos reglamentarios.",
-"Usted podrá formular consultas, peticiones y reclamos ante STERLING DE COLOMBIA S.A. con el propósito de conocer y/o informarse sobre el tratamiento del que son objeto, y cuando los mismos deban ser actualizados, modificados o rectificados. A su vez, si en el desarrollo de las diversas operaciones que se efectúen sobre sus datos personales, usted considera que estos han sido utilizados de manera contraria a las finalidades autorizadas o a las normas y principios que regulan el tratamiento de información personal, podrá comunicarse con STERLING DE COLOMBIA S.A. a fin de subsanar cualquier inconformidad o solicitar la supresión de los mismos si fuere procedente.",
-"Si desea obtener más información en relación con los medios y mecanismos dispuestos por STERLING DE COLOMBIA S.A. para el ejercicio de los derechos que le asisten como Titular, se le invita a solicitar vía e-mail la Política de Tratamiento de Protección de Datos Personales; así mismo, para contactarse con el Responsable del tratamiento de la información personal, puede dirigirse a través del correo datospersonales@sterlingjoyeros.com.",
-"Manifiesto que la presente autorización me fue solicitada y puesta de presente antes de entregar mis datos y que la suscribo de forma libre y voluntaria una vez leída en su totalidad."
-];
-
-/* ------------------------------------------------------------------
-   Almacenes por marca — orden: Sterling, Malva, Tiffany, CH, PG
------------------------------------------------------------------- */
-const ALMACENES = [
-  { m:"Sterling", t:[
-    { c:"st-baq",     n:"Barranquilla · Luxury Gardens" },
-    { c:"st-bog-and", n:"Bogotá · Centro Comercial Andino" },
-    { c:"st-bog-uni", n:"Bogotá · Centro Comercial Unicentro" },
-    { c:"st-cal",     n:"Cali · Centro Comercial Unicentro" },
-    { c:"st-ctg",     n:"Cartagena · La Serrezuela" },
-    { c:"st-med",     n:"Medellín · Centro Comercial El Tesoro" }
-  ]},
-  { m:"Malva", t:[
-    { c:"ma-baq",     n:"Barranquilla · C.C. Mallplaza Buenavista - Nivel 1" },
-    { c:"ma-bog-ret", n:"Bogotá · C.C. El Retiro (al lado de Andrés D.C.)" },
-    { c:"ma-bog-109", n:"Bogotá · Malva Calle 109" },
-    { c:"ma-bog-gra", n:"Bogotá · Malva Shoe Shop - Gran Estación" },
-    { c:"ma-bog-85",  n:"Bogotá · Malva Shoe Shop Cl 85" },
-    { c:"ma-bog-col", n:"Bogotá · C.C. Parque La Colina" },
-    { c:"ma-buc",     n:"Bucaramanga · C.C. La Quinta" },
-    { c:"ma-cal",     n:"Cali · C.C. Jardín Plaza" },
-    { c:"ma-ctg-ser", n:"Cartagena · C.C. La Serrezuela" },
-    { c:"ma-ctg-cen", n:"Cartagena · Centro Histórico" },
-    { c:"ma-chi",     n:"Chía · Malva Shoe Shop - Fontanar" },
-    { c:"ma-med",     n:"Medellín · C.C. El Tesoro" },
-    { c:"ma-sop",     n:"Sopó · Malva Sopó" }
-  ]},
-  { m:"Tiffany", t:[
-    { c:"ti-bog",     n:"Bogotá · Andino Mall" }
-  ]},
-  { m:"Carolina Herrera", t:[
-    { c:"ch-baq",     n:"Barranquilla · CH Barranquilla" },
-    { c:"ch-bog",     n:"Bogotá · CH Casa Herrera Bogotá" },
-    { c:"ch-buc",     n:"Bucaramanga · CH Bucaramanga" },
-    { c:"ch-cal",     n:"Cali · CH Unicentro" },
-    { c:"ch-ctg",     n:"Cartagena · CH La Serrezuela" },
-    { c:"ch-med",     n:"Medellín · CH El Tesoro Parque Comercial" },
-    { c:"ch-sop",     n:"Sopó · CH Outlet Parque Arauco Sopó" }
-  ]},
-  { m:"Purificación García", t:[
-    { c:"pg-baq",     n:"Barranquilla · PG Barranquilla" },
-    { c:"pg-bog-ret", n:"Bogotá · PG C.C. El Retiro" },
-    { c:"pg-bog-col", n:"Bogotá · PG C.C. Parque La Colina" },
-    { c:"pg-ctg",     n:"Cartagena · PG C.C. La Serrezuela" },
-    { c:"pg-sop",     n:"Sopó · PG Outlet C.C. Arauco Sopó" }
-  ]}
-];
-
-/* Búsqueda por código corto, para los enlaces con ?t= */
-const POR_CODIGO = {};
-ALMACENES.forEach(g => g.t.forEach(x => { POR_CODIGO[x.c] = g.m + ' — ' + x.n; }));
-
 const SECTIONS = [
-  { id:'venta', title:'Punto de venta', fields:[
-    { n:'tienda', l:'Almacén', t:'tiendas', w:6, req:true },
-    { n:'asesor', l:'Asesor', w:3 },
-    { n:'fecha', l:'Fecha de solicitud', t:'date', w:3, req:true }
+  { id:'fecha', title:'Fecha de actualización', fields:[
+    { n:'fecha', l:'Fecha de actualización', t:'date', w:4, req:true }
   ]},
   { id:'personales', title:'Datos personales', fields:[
+    { n:'apellido1', l:'Primer apellido', w:2, req:true },
+    { n:'apellido2', l:'Segundo apellido', w:2 },
     { n:'nombres', l:'Nombres', w:4, req:true },
-    { n:'apellidos', l:'Apellidos', w:4, req:true },
-    { n:'cc', l:'Número de identificación', w:4, req:true, num:true },
-    { n:'nacimiento', l:'Fecha de nacimiento', t:'fnac', w:4, req:true },
-    { n:'celular', l:'Celular', t:'tel', w:4, req:true, num:true, len:10 },
-    { n:'telefono', l:'Teléfono fijo', t:'tel', w:4, num:true, len:10 },
-    { n:'email', l:'Email', t:'email', w:4, req:true },
+    { n:'cc', l:'Número de identificación (C.C.)', w:2, req:true, num:true },
+    { n:'ccCiudad', l:'Expedida en', w:2, req:true },
+    { n:'email', l:'Email', t:'email', w:4, req:true }
+  ]},
+  { id:'contacto', title:'Dirección y contacto', fields:[
     { n:'dirResidencia', l:'Dirección de residencia', w:4, req:true },
-    { n:'ciudad', l:'Ciudad', w:4, req:true },
-    { n:'dirCorrespondencia', l:'Dirección de correspondencia', w:4, req:true, mirror:'dirResidencia', mirrorLabel:'Igual a la de residencia' },
-    { n:'vivienda', l:'Vivienda', t:'seg', w:4, opts:['Casa','Apartamento'] },
-    { n:'tenencia', l:'Tenencia', t:'seg', w:4, opts:['Propia','Arrendada'] }
+    { n:'ciudad', l:'Ciudad', w:2, req:true },
+    { n:'telefono', l:'Teléfono fijo', t:'tel', w:2, num:true, len:10 },
+    { n:'celular1', l:'Celular', t:'tel', w:2, req:true, num:true, len:10 },
+    { n:'celular2', l:'Celular alterno', t:'tel', w:2, num:true, len:10 },
+    { n:'vivienda', l:'Vivienda', t:'seg', w:2, opts:['Casa','Apartamento'] },
+    { n:'tenencia', l:'Tenencia', t:'seg', w:2, opts:['Propia','Arrendada'] }
   ]},
   { id:'laboral', title:'Información laboral', fields:[
     { n:'independiente', l:'¿Trabaja como independiente?', t:'seg', w:4, opts:['No','Sí'] },
     { n:'empresa', l:'Empresa donde trabaja', w:4, req:true },
-    { n:'telEmpresa', l:'Teléfono de la empresa', t:'tel', w:4, req:true, num:true, len:10,
-      h:'Si es independiente, el teléfono de su contador' },
     { n:'dirEmpresa', l:'Dirección de la empresa', w:4, req:true },
-    { n:'cargo', l:'Cargo', w:4, req:true },
-    { n:'profesion', l:'Profesión', w:4, req:true },
-    { n:'antiguedad', l:'Antigüedad', w:4, req:true, h:'Tiempo que lleva en la empresa' },
+    { n:'telEmpresa', l:'Teléfono de la empresa', t:'tel', w:2, req:true, num:true, len:10,
+      h:'Si es independiente, el teléfono de su contador' },
+    { n:'ciudadEmpresa', l:'Ciudad', w:2, req:true },
+    { n:'cargo', l:'Cargo que ocupa', w:2, req:true },
+    { n:'antiguedad', l:'Antigüedad', w:2, req:true },
     { n:'sueldo', l:'Sueldo mensual', t:'money', w:4, req:true },
     { n:'otrosIngresos', l:'Otros ingresos', t:'money', w:4 },
     { n:'conceptoOtros', l:'Concepto de otros ingresos', w:4, h:'Arriendos, honorarios, pensión, negocio propio' }
   ]},
-  { id:'refPersonales', title:'Referencias personales', hint:'Personas que puedan dar fe de usted', fields:[
+  { id:'refPersonales', title:'Referencias personales', fields:[
     { n:'ref1Nombre', l:'Referencia 1 — nombre', w:4, req:true },
     { n:'ref1Tel', l:'Referencia 1 — teléfono', t:'tel', w:4, req:true, num:true, len:10 },
-    { n:'ref1Parentesco', l:'Referencia 1 — parentesco', w:4 },
     { n:'ref2Nombre', l:'Referencia 2 — nombre', w:4 },
-    { n:'ref2Tel', l:'Referencia 2 — teléfono', t:'tel', w:4, num:true, len:10 },
-    { n:'ref2Parentesco', l:'Referencia 2 — parentesco', w:4 }
-  ]},
-  { id:'refFamiliar', title:'Referencia familiar', hint:'Un familiar cercano a quien podamos contactar', fields:[
-    { n:'famNombre', l:'Nombre completo', w:4, req:true },
-    { n:'famTel', l:'Teléfono', t:'tel', w:4, req:true, num:true, len:10 },
-    { n:'famParentesco', l:'Parentesco', w:4, req:true, h:'Cónyuge, hijo(a), padre, madre, hermano(a)' }
-  ]},
-  { id:'refComerciales', title:'Referencias comerciales', hint:'Opcional · almacenes donde tenga crédito', fields:[
-    { n:'com1Nombre', l:'Establecimiento', w:6 },
-    { n:'com1Producto', l:'Producto', w:6, h:'Qué adquirió con ese crédito' }
-  ]},
-  { id:'bancarias', title:'Referencias bancarias y tarjetas', hint:'Opcional', fields:[
-    { n:'banco', l:'Banco', w:4 },
-    { n:'cuenta', l:'Cuenta No.', w:4, num:true },
-    { n:'tcBanco', l:'Tarjeta de crédito — banco', w:4 }
+    { n:'ref2Tel', l:'Referencia 2 — teléfono', t:'tel', w:4, num:true, len:10 }
   ]},
   { id:'vehiculo', title:'Automóvil propio', hint:'Opcional', fields:[
-    { n:'autoMarca', l:'Marca', w:6 },
-    { n:'autoModelo', l:'Modelo', w:6 },
-    { n:'autoAnio', l:'Año', w:6, num:true, max:4 },
-    { n:'autoPlaca', l:'Placa', w:6 }
+    { n:'autoPropio', l:'¿Automóvil propio?', t:'seg', w:2, opts:['Sí','No'] },
+    { n:'reservaDominio', l:'¿Reserva de dominio?', t:'seg', w:2, opts:['Sí','No'] },
+    { n:'autoMarca', l:'Marca', w:2 },
+    { n:'autoAnio', l:'Año', w:2, num:true, max:4 },
+    { n:'autoPlaca', l:'Placa', w:4 }
   ]},
-  { id:'conyuge', title:'Datos del cónyuge', hint:'Solo si es casado o vive en unión libre', fields:[
-    { n:'conNombre', l:'Nombres', w:4 },
-    { n:'conApellido', l:'Apellidos', w:4 },
-    { n:'conCc', l:'Número de identificación', w:4, num:true },
-    { n:'conEmpresa', l:'Empresa', w:4 },
-    { n:'conTel', l:'Teléfono', t:'tel', w:4, num:true, len:10 },
-    { n:'conSueldo', l:'Sueldo', t:'money', w:4 },
-    { n:'conOtros', l:'Otros ingresos', t:'money', w:4 }
-  ]},
-  { id:'conjunta', title:'Persona conjunta', hint:'Opcional · cónyuge o hijos que podrán comprar con su cupo', fields:[
-    { n:'cjNombre', l:'Nombres', w:4 },
-    { n:'cjApellido', l:'Apellidos', w:4 },
-    { n:'cjCc', l:'Número de identificación', w:4, num:true },
-    { n:'cjParentesco', l:'Parentesco', w:4, h:'Cónyuge, hijo(a), padre, madre' },
-    { n:'cjTel', l:'Teléfono', t:'tel', w:4, num:true, len:10 }
+  { id:'conyuge', title:'Datos del cónyuge', hint:'Si aplica', fields:[
+    { n:'conNombre', l:'Nombre completo', w:4 },
+    { n:'conTelefono', l:'Teléfono', t:'tel', w:4, num:true, len:10 }
   ]}
 ];
 
@@ -707,31 +556,6 @@ const SECTIONS = [
 ------------------------------------------------------------------ */
 const form = document.getElementById('app');
 document.getElementById('legalText').textContent = LEGAL;
-
-/* --- reglamento en pantalla --- */
-function reglamentoHTML() {
-  return '<h3>' + REGLAMENTO_TITULO + '</h3>'
-    + REGLAMENTO.map(p => '<p>' + p + '</p>').join('')
-    + '<ul>' + REGLAMENTO_FINALIDADES.map(p => '<li>' + p + '</li>').join('') + '</ul>'
-    + REGLAMENTO_CIERRE.map(p => '<p>' + p + '</p>').join('');
-}
-const regBox = document.getElementById('regBox');
-regBox.innerHTML = reglamentoHTML();
-
-let regLeido = false;
-regBox.addEventListener('scroll', () => {
-  if (regLeido) return;
-  if (regBox.scrollTop + regBox.clientHeight >= regBox.scrollHeight - 24) {
-    regLeido = true;
-    const s = document.getElementById('regStatus');
-    s.textContent = 'Reglamento revisado hasta el final';
-    s.className = 'read';
-  }
-});
-document.getElementById('regTop').addEventListener('click', () => {
-  regBox.scrollTo({ top: 0, behavior: 'smooth' });
-  regBox.focus();
-});
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const spanClass = w => 'grid-column:span ' + (w * 3) + ';';
@@ -758,33 +582,6 @@ SECTIONS.forEach(sec => {
         html += '<label><input type="radio" name="' + f.n + '" value="' + esc(o) + '" id="' + id + '_' + i + '"><span>' + esc(o) + '</span></label>';
       });
       html += '</div>';
-    } else if (f.t === 'fnac') {
-      const hoy = new Date();
-      const maxA = hoy.getFullYear() - 18;
-      const minA = hoy.getFullYear() - 100;
-      const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-                     'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-      html += '<label for="' + id + '_d">' + esc(f.l) + '</label><div class="fnac">';
-      html += '<select id="' + id + '_d" data-fnac="d"><option value="">Día</option>';
-      for (let i = 1; i <= 31; i++) html += '<option value="' + i + '">' + i + '</option>';
-      html += '</select><select id="' + id + '_m" data-fnac="m"><option value="">Mes</option>';
-      MESES.forEach((m, i) => { html += '<option value="' + (i + 1) + '">' + m + '</option>'; });
-      html += '</select><select id="' + id + '_y" data-fnac="y"><option value="">Año</option>';
-      for (let a2 = maxA; a2 >= minA; a2--) html += '<option value="' + a2 + '">' + a2 + '</option>';
-      html += '</select></div><input type="hidden" name="' + f.n + '" id="' + id + '">';
-    } else if (f.t === 'tiendas') {
-      html += '<label for="' + id + '">' + esc(f.l) + '</label><select id="' + id + '" name="' + f.n + '">'
-           + '<option value="">Seleccione el almacén…</option>';
-      ALMACENES.forEach(g => {
-        html += '<optgroup label="' + esc(g.m) + '">';
-        g.t.forEach(x => { html += '<option value="' + esc(g.m + ' — ' + x.n) + '">' + esc(x.n) + '</option>'; });
-        html += '</optgroup>';
-      });
-      html += '</select>';
-    } else if (f.t === 'select') {
-      html += '<label for="' + id + '">' + esc(f.l) + '</label><select id="' + id + '" name="' + f.n + '">';
-      f.opts.forEach(o => { html += '<option value="' + esc(o) + '">' + (o ? esc(o) : 'Seleccione…') + '</option>'; });
-      html += '</select>';
     } else if (f.t === 'money') {
       html += '<label for="' + id + '">' + esc(f.l) + '</label><div class="money"><span class="cur">COP</span>'
            + '<input type="text" inputmode="numeric" id="' + id + '" name="' + f.n + '" data-money placeholder="0"></div>';
@@ -803,110 +600,85 @@ SECTIONS.forEach(sec => {
   form.appendChild(wrap);
 });
 
-/* Fecha de nacimiento con tres listas */
-(function fechaNacimiento() {
-  const caja = form.querySelector('.fnac');
-  if (!caja) return;
-  const d = caja.querySelector('[data-fnac=d]');
-  const m = caja.querySelector('[data-fnac=m]');
-  const y = caja.querySelector('[data-fnac=y]');
-  const oculto = form.querySelector('[name=nacimiento]');
+/* ------------------------------------------------------------------
+   Correspondencia — medio a elegir (Dirección / Correo / WhatsApp)
+   y su confirmación según lo elegido. Se arma a mano porque el medio
+   escogido cambia qué campo se pide, algo que la especificación
+   declarativa de SECTIONS no representa.
+------------------------------------------------------------------ */
+(function seccionCorrespondencia() {
+  const html =
+    '<header><h2>Correspondencia</h2><span class="hint">¿Por dónde prefiere recibir su correspondencia?</span></header>'
+  + '<div class="grid">'
+  + '<div class="field req" id="w_medioCorrespondencia" style="grid-column:span 12;">'
+  +   '<span class="flabel">Medio de correspondencia</span>'
+  +   '<div class="seg">'
+  +     '<label><input type="radio" name="medioCorrespondencia" value="Dirección física" id="f_medioCorrespondencia_0"><span>Dirección física</span></label>'
+  +     '<label><input type="radio" name="medioCorrespondencia" value="Correo electrónico" id="f_medioCorrespondencia_1"><span>Correo electrónico</span></label>'
+  +     '<label><input type="radio" name="medioCorrespondencia" value="WhatsApp" id="f_medioCorrespondencia_2"><span>WhatsApp</span></label>'
+  +   '</div><span class="err">Campo obligatorio</span>'
+  + '</div>'
+  + '<div class="field req" id="w_mismaDireccion" style="grid-column:span 12;display:none">'
+  +   '<span class="flabel">¿Es la misma dirección de su residencia?</span>'
+  +   '<div class="seg">'
+  +     '<label><input type="radio" name="mismaDireccion" value="Sí" id="f_mismaDireccion_0"><span>Sí</span></label>'
+  +     '<label><input type="radio" name="mismaDireccion" value="No" id="f_mismaDireccion_1"><span>No</span></label>'
+  +   '</div><span class="err">Campo obligatorio</span>'
+  + '</div>'
+  + '<div class="field req" id="w_dirCorrespondencia" style="grid-column:span 12;display:none">'
+  +   '<label for="f_dirCorrespondencia">Dirección de correspondencia</label>'
+  +   '<input type="text" id="f_dirCorrespondencia" name="dirCorrespondencia">'
+  +   '<span class="err">Campo obligatorio</span>'
+  + '</div>'
+  + '<div class="field req" id="w_correoCorrespondencia" style="grid-column:span 12;display:none">'
+  +   '<label for="f_correoCorrespondencia">Confirme su correo electrónico</label>'
+  +   '<input type="email" id="f_correoCorrespondencia" name="correoCorrespondencia">'
+  +   '<span class="err">Campo obligatorio</span>'
+  + '</div>'
+  + '<div class="field req" id="w_whatsapp" style="grid-column:span 12;display:none">'
+  +   '<label for="f_whatsapp">Número de WhatsApp</label>'
+  +   '<input type="tel" id="f_whatsapp" name="whatsapp" inputmode="numeric" data-num maxlength="10">'
+  +   '<span class="err">Campo obligatorio</span>'
+  + '</div>'
+  + '</div>';
 
-  const diasDelMes = (mes, anio) =>
-    (!mes ? 31 : new Date(anio || 2024, mes, 0).getDate());
+  const wrap = document.createElement('section');
+  wrap.className = 'section';
+  wrap.innerHTML = html;
 
-  const ajustarDias = () => {
-    const tope = diasDelMes(+m.value, +y.value);
-    const elegido = +d.value;
-    [...d.options].forEach(o => { if (o.value) o.hidden = +o.value > tope; });
-    if (elegido > tope) d.value = '';
-  };
-
-  const componer = () => {
-    ajustarDias();
-    oculto.value = (d.value && m.value && y.value)
-      ? y.value + '-' + String(m.value).padStart(2, '0') + '-' + String(d.value).padStart(2, '0')
-      : '';
-    const campo = caja.closest('.field');
-    if (oculto.value) campo.classList.remove('invalid');
-    updateProgress();
-  };
-
-  [d, m, y].forEach(sel => sel.addEventListener('change', componer));
+  const laboralSec = [...form.querySelectorAll('.section')].find(s => s.querySelector('h2').textContent === 'Información laboral');
+  form.insertBefore(wrap, laboralSec);
 })();
 
-/* Persona conjunta: marcar la sección como "todo o nada" en cuanto se escriba algo */
-(function conjuntaTodoONada() {
-  const campos = ['cjNombre', 'cjApellido', 'cjCc', 'cjParentesco', 'cjTel']
-    .map(n => form.querySelector('[name="' + n + '"]')).filter(Boolean);
-  if (!campos.length) return;
-  const sec = campos[0].closest('.section');
-  const hint = sec && sec.querySelector('header .hint');
-  const base = hint ? hint.textContent : '';
-  const revisar = () => {
-    const algo = campos.some(e => e.value.trim());
-    if (hint) hint.textContent = algo
-      ? 'Complete todos los datos de la persona conjunta'
-      : base;
-    sec.querySelectorAll('.field').forEach(f => f.classList.toggle('req', algo));
-  };
-  campos.forEach(e => e.addEventListener('input', revisar));
-})();
+function actualizarCorrespondencia() {
+  const medio = val('medioCorrespondencia');
+  document.getElementById('w_mismaDireccion').style.display = (medio === 'Dirección física') ? '' : 'none';
+  document.getElementById('w_correoCorrespondencia').style.display = (medio === 'Correo electrónico') ? '' : 'none';
+  document.getElementById('w_whatsapp').style.display = (medio === 'WhatsApp') ? '' : 'none';
 
-/* Dirección igual a la de residencia */
-form.querySelectorAll('[data-mirror]').forEach(chk => {
-  const destino = form.querySelector('[name="' + chk.dataset.mirror + '"]');
-  const origen = form.querySelector('[name="' + chk.dataset.from + '"]');
-  if (!destino || !origen) return;
-
-  const sincronizar = () => {
-    if (!chk.checked) return;
-    destino.value = origen.value;
-    destino.closest('.field').classList.remove('invalid');
-  };
-  chk.addEventListener('change', () => {
-    destino.readOnly = chk.checked;
-    destino.closest('.field').classList.toggle('locked', chk.checked);
-    if (chk.checked) sincronizar(); else destino.focus();
-    updateProgress();
-  });
-  origen.addEventListener('input', () => { sincronizar(); updateProgress(); });
+  const misma = val('mismaDireccion');
+  const mostrarDir = (medio === 'Dirección física' && misma === 'No');
+  document.getElementById('w_dirCorrespondencia').style.display = mostrarDir ? '' : 'none';
+}
+form.querySelectorAll('[name=medioCorrespondencia], [name=mismaDireccion]').forEach(r => {
+  r.addEventListener('change', () => { actualizarCorrespondencia(); updateProgress(); });
 });
 
-/* ------------------------------------------------------------------
-   Origen desde el enlace:  ?t=codigo-tienda&a=nombre-asesor
------------------------------------------------------------------- */
-(function origenDesdeURL() {
-  const p = new URLSearchParams(location.search);
-  const cod = (p.get('t') || '').trim().toLowerCase();
-  const ase = (p.get('a') || '').trim();
-
-  const tienda = POR_CODIGO[cod] || '';
-  if (!tienda && !ase) return;
-
-  const selT = form.querySelector('[name=tienda]');
-  const inpA = form.querySelector('[name=asesor]');
-  if (tienda && selT) selT.value = tienda;
-  if (ase && inpA) inpA.value = ase;
-
-  // Si vino la tienda, el cliente no necesita ver la sección
-  if (tienda) {
-    const sec = form.querySelector('.section');
-    if (sec) sec.style.display = 'none';
-
-    const banner = document.createElement('div');
-    banner.className = 'origen';
-    banner.innerHTML = '<span><span class="k">Solicitud iniciada en</span><span class="v">' + esc(tienda) + '</span></span>'
-      + (ase ? '<span><span class="k">Asesor</span><span class="v">' + esc(ase) + '</span></span>' : '');
-    form.parentNode.insertBefore(banner, form);
+function correspondenciaCompleta() {
+  const medio = val('medioCorrespondencia');
+  if (medio === 'Dirección física') {
+    const misma = val('mismaDireccion');
+    if (!misma) return false;
+    return misma === 'Sí' ? true : !!val('dirCorrespondencia');
   }
-})();
-
-/* fecha de hoy por defecto */
-const today = new Date();
-const iso = today.toISOString().slice(0, 10);
-const fFecha = form.querySelector('[name=fecha]');
-if (fFecha) fFecha.value = iso;
+  if (medio === 'Correo electrónico') {
+    return !!val('correoCorrespondencia') && val('correoCorrespondencia') === val('email');
+  }
+  if (medio === 'WhatsApp') {
+    return digits(val('whatsapp')).length === 10;
+  }
+  return false;
+}
 
 /* ------------------------------------------------------------------
    Comportamiento de campos
@@ -934,10 +706,8 @@ function paint(el) {
 }
 
 function updateCard() {
-  const n = (val('nombres') + ' ' + val('apellidos')).trim();
+  const n = (val('nombres') + ' ' + val('apellido1') + ' ' + val('apellido2')).trim();
   document.getElementById('cardName').textContent = n ? n.toUpperCase() : 'NOMBRE DEL CLIENTE';
-  const t = val('tienda');
-  document.getElementById('cardStore').textContent = t || 'Punto de venta';
 }
 
 const val = n => {
@@ -950,16 +720,17 @@ const val = n => {
   return (el.value || '').trim();
 };
 
-const REQUIRED = SECTIONS.flatMap(s => s.fields.filter(f => f.req).map(f => f.n));
+const REQUIRED = SECTIONS.flatMap(s => s.fields.filter(f => f.req).map(f => f.n)).concat(['medioCorrespondencia']);
 const CON_LONGITUD = SECTIONS.flatMap(s => s.fields.filter(f => f.len));
 
 function updateProgress() {
   const done = REQUIRED.filter(n => val(n)).length;
-  const consents = ['ackReglamento', 'ackCredito'].filter(id => document.getElementById(id).checked).length;
+  const consents = document.getElementById('ackAutorizacion').checked ? 1 : 0;
+  const corrOk = correspondenciaCompleta() ? 1 : 0;
   const total = REQUIRED.length + 2;
-  const pct = Math.round(((done + consents) / total) * 100);
+  const pct = Math.round(((done + consents + corrOk) / total) * 100);
   document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent = (done + consents) + ' de ' + total + ' requisitos completos';
+  document.getElementById('progressLabel').textContent = (done + consents + corrOk) + ' de ' + total + ' requisitos completos';
 }
 document.querySelectorAll('[data-consent]').forEach(c => c.addEventListener('change', () => {
   const w = c.closest('.check'); if (c.checked) w.classList.remove('missing');
@@ -989,19 +760,6 @@ function validate() {
     if (!firstBad) firstBad = w;
   }
 
-  /* Persona conjunta: si escribió algo, debe completarla toda */
-  const CONJUNTA = ['cjNombre', 'cjApellido', 'cjCc', 'cjParentesco', 'cjTel'];
-  if (CONJUNTA.some(n => val(n))) {
-    CONJUNTA.forEach(n => {
-      if (!val(n)) {
-        const w = document.getElementById('w_' + n);
-        w.classList.add('invalid');
-        w.querySelector('.err').textContent = 'Complete todos los datos de la persona conjunta';
-        if (!firstBad) firstBad = w;
-      }
-    });
-  }
-
   /* Teléfonos: exactamente los dígitos exigidos */
   CON_LONGITUD.forEach(f => {
     const v = digits(val(f.n));
@@ -1014,17 +772,48 @@ function validate() {
     }
   });
 
+  /* Correspondencia: confirmación según el medio elegido */
+  const medio = val('medioCorrespondencia');
+  if (medio === 'Dirección física') {
+    const misma = val('mismaDireccion');
+    if (!misma) {
+      const w = document.getElementById('w_mismaDireccion');
+      w.classList.add('invalid');
+      if (!firstBad) firstBad = w;
+    } else if (misma === 'No' && !val('dirCorrespondencia')) {
+      const w = document.getElementById('w_dirCorrespondencia');
+      w.classList.add('invalid');
+      if (!firstBad) firstBad = w;
+    }
+  } else if (medio === 'Correo electrónico') {
+    const v = val('correoCorrespondencia');
+    const w = document.getElementById('w_correoCorrespondencia');
+    if (!v) { w.classList.add('invalid'); if (!firstBad) firstBad = w; }
+    else if (v !== val('email')) {
+      w.classList.add('invalid');
+      w.querySelector('.err').textContent = 'Debe coincidir con el correo ingresado arriba';
+      if (!firstBad) firstBad = w;
+    }
+  } else if (medio === 'WhatsApp') {
+    const v = digits(val('whatsapp'));
+    const w = document.getElementById('w_whatsapp');
+    if (!v) { w.classList.add('invalid'); if (!firstBad) firstBad = w; }
+    else if (v.length !== 10) {
+      w.classList.add('invalid');
+      w.querySelector('.err').textContent = 'Debe tener 10 dígitos';
+      if (!firstBad) firstBad = w;
+    }
+  }
+
   let consentMissing = false;
-  ['ackReglamento', 'ackCredito'].forEach(id => {
-    const c = document.getElementById(id);
-    const w = document.getElementById('wrap_' + id);
-    if (!c.checked) { w.classList.add('missing'); consentMissing = true; if (!firstBad) firstBad = w; }
-  });
+  const c = document.getElementById('ackAutorizacion');
+  const w = document.getElementById('wrap_ackAutorizacion');
+  if (!c.checked) { w.classList.add('missing'); consentMissing = true; if (!firstBad) firstBad = w; }
 
   if (firstBad) {
     firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setStatus(consentMissing && !document.querySelector('.field.invalid')
-      ? 'Falta marcar las autorizaciones obligatorias.'
+      ? 'Falta marcar la autorización obligatoria.'
       : 'Complete los campos marcados en rojo.', true);
     return false;
   }
@@ -1039,16 +828,10 @@ function setStatus(msg, bad) {
 
 /* ------------------------------------------------------------------
    Documento PDF — vectorial, texto real y seleccionable
+   (mismas primitivas y correcciones de jsPDF que en Solicitud)
 ------------------------------------------------------------------ */
-
-
-/* Generador de PDF vectorial — texto real, seleccionable */
-
 function construirPDF(jsPDF, D, opciones) {
-  const {
-    LOGO, REGLAMENTO_TITULO, REGLAMENTO, REGLAMENTO_FINALIDADES,
-    REGLAMENTO_CIERRE, LEGAL, folio, stamp
-  } = opciones;
+  const { LOGO, LEGAL, AUTORIZACION_TEXTO, folio, stamp } = opciones;
 
   const doc = new jsPDF({ unit: 'pt', format: 'a4', compress: true });
   const W = 595.28, H = 841.89;
@@ -1059,7 +842,7 @@ function construirPDF(jsPDF, D, opciones) {
   const GRIS = [122, 126, 130];
   const LINEA = [178, 180, 182];
 
-  const nombre = ((D.nombres || '') + ' ' + (D.apellidos || '')).trim().toUpperCase() || '—';
+  const nombre = ((D.nombres || '') + ' ' + (D.apellido1 || '') + ' ' + (D.apellido2 || '')).trim().toUpperCase() || '—';
   const dash = v => (v && String(v).trim()) ? String(v).trim() : '—';
   const money = v => {
     const d = String(v || '').replace(/\D/g, '');
@@ -1077,7 +860,6 @@ function construirPDF(jsPDF, D, opciones) {
     doc.setFontSize(size);
     doc.setTextColor(color[0], color[1], color[2]);
   };
-  /* jsPDF ignora el interletrado al medir: se calcula el ancho real */
   const anchoReal = (t, esp) => doc.getTextWidth(t) + (esp || 0) * t.length;
   const derecha = (t, y, esp) => {
     doc.setCharSpace(esp || 0);
@@ -1090,20 +872,16 @@ function construirPDF(jsPDF, D, opciones) {
     doc.line(ML, y, W - MR, y);
   };
 
-  let pagina = 0;
-
   function encabezado() {
-    pagina++;
     if (LOGO) doc.addImage(LOGO, 'PNG', ML, 34, 88, 42);
     setT(6, GRIS);
     doc.setCharSpace(2.4);
     doc.text('SILVER', ML + 2, 88);
     doc.setCharSpace(0);
 
-    /* bloque derecho: se ajusta el interletrado hasta que quepa en su columna */
     const anchoDer = CW - 150;
-    const l1 = 'SOLICITUD DE CRÉDITO STERLING';
-    const l2 = 'FOLIO ' + folio + '  ·  ' + fdate(D.fecha);
+    const l1 = 'ACTUALIZACIÓN DE DATOS';
+    const l2 = 'FOLIO ' + folio + '  ·  ' + stamp;
     setT(7, GRIS);
     let esp = 1.5;
     while (esp > 0.1 && Math.max(anchoReal(l1, esp), anchoReal(l2, esp)) > anchoDer) esp -= 0.1;
@@ -1118,9 +896,19 @@ function construirPDF(jsPDF, D, opciones) {
     const y = H - 42;
     regla(y - 11, 0.5, LINEA);
     setT(6.2, GRIS);
-    doc.setCharSpace(1.1);
-    doc.text('STERLING DE COLOMBIA S.A.  ·  NIT 860.048.245-5  ·  SOLICITUD CRÉDITO  ·  '
-      + nombre + '  ·  C.C. ' + dash(D.cc), ML, y);
+    const esp = 1.1;
+    doc.setCharSpace(esp);
+    let texto = 'STERLING DE COLOMBIA S.A.  ·  NIT 860.048.245-5  ·  ACTUALIZACIÓN DE DATOS  ·  '
+      + nombre + '  ·  C.C. ' + dash(D.cc);
+    /* se reserva espacio a la derecha para "PÁGINA X DE Y" y se recorta
+       midiendo el ancho real (con interletrado), no con splitTextToSize,
+       que no lo tiene en cuenta y subestima el ancho */
+    const anchoDisp = CW - 92;
+    if (anchoReal(texto, esp) > anchoDisp) {
+      while (texto.length > 1 && anchoReal(texto + '…', esp) > anchoDisp) texto = texto.slice(0, -1);
+      texto += '…';
+    }
+    doc.text(texto, ML, y);
     doc.setCharSpace(0);
   }
 
@@ -1141,9 +929,8 @@ function construirPDF(jsPDF, D, opciones) {
     return y + 16;
   }
 
-  const Y_FONDO = H - 62;   // límite antes del pie
+  const Y_FONDO = H - 62;
 
-  /* si el siguiente bloque no cabe, se abre página nueva */
   function espacio(alto, y) {
     if (y + alto <= Y_FONDO) return y;
     pie();
@@ -1161,11 +948,10 @@ function construirPDF(jsPDF, D, opciones) {
     return y + 19;
   }
 
-  /* filas de celdas: cada celda [etiqueta, valor, columnas de 6] */
   function filas(defs, y) {
     const u = CW / 6;
     let col = 0, x = ML;
-    defs.forEach(([lab, val, span]) => {
+    defs.forEach(([lab, v, span]) => {
       const s = span || 2;
       if (col + s > 6) { col = 0; x = ML; y += 25; }
       if (col === 0 && y + 20 > Y_FONDO) { pie(); doc.addPage(); y = encabezado(); }
@@ -1175,7 +961,7 @@ function construirPDF(jsPDF, D, opciones) {
       doc.text(String(lab).toUpperCase(), x, y);
       doc.setCharSpace(0);
       setT(8.6, NEGRO);
-      const texto = doc.splitTextToSize(String(val), ancho)[0] || '';
+      const texto = doc.splitTextToSize(String(v), ancho)[0] || '';
       doc.text(texto, x, y + 11);
       doc.setDrawColor(LINEA[0], LINEA[1], LINEA[2]);
       doc.setLineWidth(0.4);
@@ -1200,257 +986,124 @@ function construirPDF(jsPDF, D, opciones) {
     return y + lineas.length * 9.6 + 7;
   }
 
-  /* ================= PÁGINA 1 ================= */
+  /* ================= CONTENIDO ================= */
   let y = encabezado();
-  y = titulo('Datos del solicitante', y);
-
-  y = seccion('Punto de venta', y);
-  y = filas([
-    ['Almacén', dash(D.tienda), 4],
-    ['Asesor', dash(D.asesor), 2],
-    ['Fecha de solicitud', fdate(D.fecha), 2]
-  ], y);
+  y = titulo('Actualización de datos del tarjetahabiente', y);
 
   y = seccion('Datos personales', y);
   y = filas([
-    ['Nombres', dash(D.nombres), 2], ['Apellidos', dash(D.apellidos), 2],
-    ['Número de identificación', dash(D.cc), 2],
-    ['Fecha de nacimiento', fdate(D.nacimiento), 2], ['Celular', dash(D.celular), 2],
-    ['Teléfono fijo', dash(D.telefono), 2],
-    ['Email', dash(D.email), 4], ['Ciudad', dash(D.ciudad), 2],
-    ['Dirección de residencia', dash(D.dirResidencia), 3],
-    ['Dirección de correspondencia', dash(D.dirCorrespondencia), 3],
+    ['Fecha de actualización', fdate(D.fecha), 2],
+    ['Primer apellido', dash(D.apellido1), 2], ['Segundo apellido', dash(D.apellido2), 2],
+    ['Nombres', dash(D.nombres), 3],
+    ['Número de identificación', dash(D.cc), 2], ['Expedida en', dash(D.ccCiudad), 3],
+    ['Email', dash(D.email), 3]
+  ], y);
+
+  y = seccion('Dirección y contacto', y);
+  y = filas([
+    ['Dirección de residencia', dash(D.dirResidencia), 4], ['Ciudad', dash(D.ciudad), 2],
+    ['Teléfono fijo', dash(D.telefono), 2], ['Celular', dash(D.celular1), 2],
+    ['Celular alterno', dash(D.celular2), 2],
     ['Vivienda', dash(D.vivienda), 3], ['Tenencia', dash(D.tenencia), 3]
+  ], y);
+
+  y = seccion('Correspondencia', y);
+  y = filas([
+    ['Medio de correspondencia', dash(D.medioCorrespondencia), 2],
+    ['Dirección de envío', dash(D.dirCorrespondencia), 4],
+    ['Correo de correspondencia', dash(D.correoCorrespondencia), 3],
+    ['WhatsApp', dash(D.whatsapp), 3]
   ], y);
 
   y = seccion('Información laboral', y);
   y = filas([
-    ['Empresa', dash(D.empresa), 2], ['Teléfono empresa / contador', dash(D.telEmpresa), 2],
-    ['Trabaja como independiente', dash(D.independiente), 2],
-    ['Dirección de la empresa', dash(D.dirEmpresa), 2], ['Cargo', dash(D.cargo), 2],
-    ['Profesión', dash(D.profesion), 2],
+    ['¿Independiente?', dash(D.independiente), 2],
+    ['Empresa donde trabaja', dash(D.empresa), 4], ['Dirección de la empresa', dash(D.dirEmpresa), 3],
+    ['Teléfono de la empresa', dash(D.telEmpresa), 3], ['Ciudad', dash(D.ciudadEmpresa), 3],
+    ['Cargo que ocupa', dash(D.cargo), 2],
     ['Antigüedad', dash(D.antiguedad), 2], ['Sueldo mensual', money(D.sueldo), 2],
-    ['Otros ingresos', money(D.otrosIngresos), 2],
-    ['Concepto de otros ingresos', dash(D.conceptoOtros), 6]
+    ['Otros ingresos', money(D.otrosIngresos), 3],
+    ['Concepto de otros ingresos', dash(D.conceptoOtros), 3]
   ], y);
 
   y = seccion('Referencias personales', y);
   y = filas([
-    ['Nombre 1', dash(D.ref1Nombre), 2], ['Teléfono', dash(D.ref1Tel), 2],
-    ['Parentesco', dash(D.ref1Parentesco), 2],
-    ['Nombre 2', dash(D.ref2Nombre), 2], ['Teléfono', dash(D.ref2Tel), 2],
-    ['Parentesco', dash(D.ref2Parentesco), 2]
-  ], y);
-
-  y = seccion('Referencia familiar', y);
-  y = filas([
-    ['Nombre completo', dash(D.famNombre), 2], ['Teléfono', dash(D.famTel), 2],
-    ['Parentesco', dash(D.famParentesco), 2]
-  ], y);
-
-  y = seccion('Referencias comerciales, bancarias y tarjetas', y);
-  y = filas([
-    ['Establecimiento', dash(D.com1Nombre), 3], ['Producto', dash(D.com1Producto), 3],
-    ['Banco', dash(D.banco), 3], ['Cuenta No.', dash(D.cuenta), 3],
-    ['Tarjeta de crédito — banco', dash(D.tcBanco), 6]
+    ['Referencia 1 — nombre', dash(D.ref1Nombre), 4], ['Referencia 1 — teléfono', dash(D.ref1Tel), 2],
+    ['Referencia 2 — nombre', dash(D.ref2Nombre), 4], ['Referencia 2 — teléfono', dash(D.ref2Tel), 2]
   ], y);
 
   y = seccion('Automóvil propio', y);
   y = filas([
-    ['Marca', dash(D.autoMarca), 2], ['Modelo', dash(D.autoModelo), 2],
-    ['Año', dash(D.autoAnio), 1], ['Placa', dash(D.autoPlaca), 1]
+    ['¿Automóvil propio?', dash(D.autoPropio), 2], ['¿Reserva de dominio?', dash(D.reservaDominio), 2],
+    ['Marca', dash(D.autoMarca), 1], ['Año', dash(D.autoAnio), 1],
+    ['Placa', dash(D.autoPlaca), 2]
   ], y);
-  pie();
-
-  /* ================= PÁGINA 2 ================= */
-  doc.addPage();
-  y = encabezado();
-  y = titulo('Cónyuge, persona conjunta y autorizaciones', y);
 
   y = seccion('Datos del cónyuge', y);
   y = filas([
-    ['Nombres', dash(D.conNombre), 2], ['Apellidos', dash(D.conApellido), 2],
-    ['Número de identificación', dash(D.conCc), 2],
-    ['Empresa', dash(D.conEmpresa), 2], ['Teléfono', dash(D.conTel), 2],
-    ['Sueldo', money(D.conSueldo), 2],
-    ['Otros ingresos', money(D.conOtros), 6]
+    ['Nombre completo', dash(D.conNombre), 4], ['Teléfono', dash(D.conTelefono), 2]
   ], y);
 
-  y = seccion('Persona conjunta autorizada', y);
-  y = filas([
-    ['Nombres', dash(D.cjNombre), 2], ['Apellidos', dash(D.cjApellido), 2],
-    ['Número de identificación', dash(D.cjCc), 2],
-    ['Parentesco (cónyuge o hijos)', dash(D.cjParentesco), 3], ['Teléfono', dash(D.cjTel), 3]
-  ], y);
-
-  y = seccion('Declaración', y);
+  /* ---- autorización ---- */
+  y = espacio(60, y);
+  y = seccion('Autorización', y);
   setT(7.8, NEGRO);
-  const decl = doc.splitTextToSize(LEGAL, CW - 34);
+  const decl = doc.splitTextToSize(LEGAL + ' ' + AUTORIZACION_TEXTO, CW - 34);
+  y = espacio(decl.length * 10.5 + 26, y);
   doc.setDrawColor(NEGRO[0], NEGRO[1], NEGRO[2]);
   doc.setLineWidth(0.6);
   doc.rect(ML, y - 10, CW, decl.length * 10.5 + 18);
   doc.text(decl, ML + 12, y + 2, { lineHeightFactor: 1.35 });
   y += decl.length * 10.5 + 26;
 
-  y = casilla(D.ackReglamento === 'Sí',
-    'Declaro haber leído y comprendido el reglamento del Crédito Sterling y acepto sus términos y condiciones.', y, CW);
-  y = casilla(D.ackCredito === 'Sí',
-    'Autorizo de manera previa, expresa e informada a Sterling de Colombia S.A., o a quien represente sus derechos, '
-    + 'a consultar, solicitar, suministrar, reportar, procesar y divulgar mi información financiera, comercial y crediticia '
-    + 'ante centrales de información y operadores de riesgo, así como a tratar mis datos personales conforme a la '
-    + 'Ley 1581 de 2012 y a la política de tratamiento de datos de la compañía.', y, CW);
-  y = casilla(D.ackComercial === 'Sí',
-    'Autorizo el envío de información comercial y promocional de las marcas del grupo. (Opcional)', y, CW);
+  y = espacio(30, y);
+  y = casilla(D.ackAutorizacion === 'Sí', AUTORIZACION_TEXTO, y, CW);
 
-  y += 8;
-  regla(y, 0.5, LINEA);
-  setT(7.4, GRIS);
-  doc.text(doc.splitTextToSize(
-    'La firma de este documento se consigna en la última página y comprende la totalidad de la solicitud, '
-    + 'la declaración, las autorizaciones y el reglamento anexo.', CW - 10), ML, y + 13, { lineHeightFactor: 1.4 });
-  pie();
-
-  /* ================= PÁGINA 3 ================= */
-  doc.addPage();
-  y = encabezado();
-  y = titulo('Anexo · Reglamento y condiciones', y);
-
-  setT(7.4, NEGRO, 'bold');
-  doc.text(doc.splitTextToSize(REGLAMENTO_TITULO.toUpperCase(), CW - 10), W / 2, y, { align: 'center', lineHeightFactor: 1.3 });
-  y += 22;
-
-  const colW = (CW - 26) / 2;
-
-  /* Se reserva de abajo hacia arriba: trazabilidad, cuadro de la compañía y firma */
-  const declFirma = 'Con mi firma declaro que la información consignada en esta solicitud es veraz, que he recibido, leído y '
-    + 'comprendido el reglamento y condiciones del Crédito Sterling aquí anexo, y que acepto las declaraciones y '
-    + 'autorizaciones marcadas en este documento. Esta firma comprende la totalidad del presente documento.';
-  const textoTrace = 'Diligenciado en ' + dash(D.tienda) + (D.asesor ? '  ·  Asesor: ' + D.asesor : '')
-    + '  ·  Generado el ' + stamp + '  ·  Folio ' + folio
-    + '. Documento generado electrónicamente para firma. Las autorizaciones marcadas fueron confirmadas '
-    + 'por el solicitante antes de la generación de este documento.';
-
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(6.6);
-  const lineasTrace = doc.splitTextToSize(textoTrace, CW - 10);
-  doc.setFontSize(7.8);
-  const lineasFirma = doc.splitTextToSize(declFirma, CW - 10);
-
-  const altoTrace = 12 + lineasTrace.length * 9.6;
-  const altoCaja = 52;
-  const altoFirma = lineasFirma.length * 11 + 76;
-  const yTrace = Y_FONDO - altoTrace;
-  const yCaja = yTrace - altoCaja - 18;
-  const yFirma = yCaja - altoFirma - 14;
-  const yFondoCol = yFirma - 16;
-
-  /* el reglamento se ajusta al espacio que quede */
-  const bloques = []
-    .concat(REGLAMENTO.map(t => ({ t, tipo: 'p' })))
-    .concat(REGLAMENTO_FINALIDADES.map(t => ({ t, tipo: 'li' })))
-    .concat(REGLAMENTO_CIERRE.map(t => ({ t, tipo: 'p' })));
-
-  const yTope = y;
-  let cuerpo = 6.2, lh, plan = null;
-  for (; cuerpo >= 4.4; cuerpo -= 0.15) {
-    lh = cuerpo * 1.42;
-    doc.setFontSize(cuerpo);
-    doc.setFont('helvetica', 'normal');
-    const items = bloques.map(b => ({
-      tipo: b.tipo,
-      lineas: doc.splitTextToSize(b.t, (b.tipo === 'li' ? colW - 10 : colW) - 12)
-    }));
-    const alto = items.reduce((a, i) => a + i.lineas.length * lh + 5, 0);
-    if (alto <= (yFondoCol - yTope) * 2 - 12) { plan = items; break; }
-  }
-  if (!plan) {
-    cuerpo = 4.4; lh = cuerpo * 1.42;
-    doc.setFontSize(cuerpo);
-    plan = bloques.map(b => ({ tipo: b.tipo, lineas: doc.splitTextToSize(b.t, colW - 12) }));
-  }
-
-  setT(cuerpo, NEGRO);
-  doc.setCharSpace(0);
-  let cx = ML, cy = yTope;
-  plan.forEach(item => {
-    item.lineas.forEach((linea, k) => {
-      if (cy > yFondoCol) { cx = ML + colW + 26; cy = yTope; }
-      const sangria = item.tipo === 'li' ? 10 : 0;
-      if (item.tipo === 'li' && k === 0) doc.text('·', cx, cy);
-      doc.text(linea, cx + sangria, cy);
-      cy += lh;
-    });
-    cy += 5;
-  });
-
-  /* ---- firma única ---- */
-  regla(yFirma - 14, 0.7, NEGRO);
+  /* ---- firma ---- */
+  y = espacio(90, y);
+  y += 10;
+  regla(y - 14, 0.7, NEGRO);
   setT(7.8, NEGRO);
-  doc.text(lineasFirma, ML, yFirma, { lineHeightFactor: 1.4 });
+  doc.text(doc.splitTextToSize(
+    'Para que esta actualización quede registrada es indispensable la firma del titular. '
+    + 'Con su firma declara que la información aquí consignada es veraz y sustituye la previamente registrada.',
+    CW - 10), ML, y, { lineHeightFactor: 1.4 });
+  y += 26;
 
-  const tieneConjunta = !!(D.cjNombre || D.cjApellido || D.cjCc);
-  const anchoFirma = tieneConjunta ? (CW - 40) / 2 : CW * 0.52;
-  const yLinea = yFirma + lineasFirma.length * 11 + 34;
-  doc.setDrawColor(NEGRO[0], NEGRO[1], NEGRO[2]);
+  const anchoFirma = CW * 0.6;
+  const yLinea = y + 26;
   doc.setLineWidth(0.7);
   doc.line(ML, yLinea, ML + anchoFirma, yLinea);
   setT(6.2, GRIS);
   doc.setCharSpace(1.1);
-  doc.text('FIRMA DEL SOLICITANTE', ML, yLinea + 11);
+  doc.text('FIRMA DEL TITULAR', ML, yLinea + 11);
   doc.setCharSpace(0);
   setT(8.4, NEGRO);
   doc.text(nombre, ML, yLinea + 24);
-  doc.text('C.C. ' + dash(D.cc), ML, yLinea + 35);
-
-  if (tieneConjunta) {
-    const x2 = ML + anchoFirma + 40;
-    doc.setLineWidth(0.7);
-    doc.line(x2, yLinea, x2 + anchoFirma, yLinea);
-    setT(6.2, GRIS);
-    doc.setCharSpace(1.1);
-    doc.text('FIRMA PERSONA CONJUNTA', x2, yLinea + 11);
-    doc.setCharSpace(0);
-    setT(8.4, NEGRO);
-    doc.text(((D.cjNombre || '') + ' ' + (D.cjApellido || '')).trim().toUpperCase() || '—', x2, yLinea + 24);
-    doc.text('C.C. ' + dash(D.cjCc), x2, yLinea + 35);
-  }
-
-  /* ---- uso de la compañía ---- */
-  doc.setFillColor(242, 241, 239);
-  doc.rect(ML, yCaja, CW, 15, 'F');
-  doc.setDrawColor(NEGRO[0], NEGRO[1], NEGRO[2]);
-  doc.setLineWidth(0.6);
-  doc.rect(ML, yCaja, CW, altoCaja);
-  doc.line(ML, yCaja + 15, W - MR, yCaja + 15);
-  setT(6.2, NEGRO);
-  doc.setCharSpace(1.6);
-  doc.text('USO DE LA COMPAÑÍA', ML + 9, yCaja + 10);
-  setT(5.8, GRIS);
-  ['CUPO APROBADO', 'VENDEDOR', 'APROBÓ', 'CONFIRMÓ'].forEach((c, i) => {
-    const x = ML + (CW / 4) * i;
-    if (i) {
-      doc.setDrawColor(150, 150, 150);
-      doc.setLineWidth(0.4);
-      doc.line(x, yCaja + 15, x, yCaja + altoCaja);
-    }
-    doc.text(c, x + 9, yCaja + 27);
-  });
-  doc.setCharSpace(0);
+  doc.text('C.C. ' + dash(D.cc) + (D.ccCiudad ? ' de ' + dash(D.ccCiudad) : ''), ML, yLinea + 35);
 
   /* ---- trazabilidad ---- */
-  regla(yTrace - 10, 0.5, LINEA);
+  const textoTrace = 'Generado el ' + stamp + '  ·  Folio ' + folio
+    + '. Documento generado electrónicamente para firma. La autorización marcada fue confirmada '
+    + 'por el titular antes de la generación de este documento.';
+  y = yLinea + 50;
+  y = espacio(30, y);
+  regla(y - 8, 0.5, LINEA);
   setT(6.6, GRIS);
-  doc.text('Registro de diligenciamiento', ML, yTrace);
-  doc.text(lineasTrace, ML, yTrace + 10, { lineHeightFactor: 1.45 });
+  doc.text('Registro de diligenciamiento', ML, y);
+  doc.text(doc.splitTextToSize(textoTrace, CW - 10), ML, y + 10, { lineHeightFactor: 1.45 });
   pie();
 
   numerarPaginas();
   return doc;
 }
 
-const folioActual = () => 'ST-' + iso.replace(/-/g, '') + '-' + (digits(val('cc')).slice(-4) || '0000');
-const fileName = () => 'Solicitud_Credito_Sterling_'
-  + (val('apellidos') || 'Cliente').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z]/g, '')
+const iso = new Date().toISOString().slice(0, 10);
+const fFecha = form.querySelector('[name=fecha]');
+const folioActual = () => 'ACT-' + iso.replace(/-/g, '') + '-'
+  + (digits(val('cc')).slice(-4) || '0000');
+const fileName = () => 'Actualizacion_Datos_Sterling_'
+  + (val('apellido1') || 'Cliente').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z]/g, '')
   + '_' + (digits(val('cc')) || 'SC') + '.pdf';
 
 function logoPDF() {
@@ -1463,19 +1116,26 @@ async function buildPdf() {
   if (!window.jspdf) throw new Error('No se pudo cargar el generador de PDF');
   return construirPDF(window.jspdf.jsPDF, collect(), {
     LOGO: logoPDF(),
-    REGLAMENTO_TITULO, REGLAMENTO, REGLAMENTO_FINALIDADES, REGLAMENTO_CIERRE, LEGAL,
+    LEGAL, AUTORIZACION_TEXTO,
     folio: folioActual(),
     stamp: new Date().toLocaleString('es-CO', { dateStyle: 'long', timeStyle: 'short' })
   });
 }
 
-/* Todos los campos como objeto plano, para la hoja de cálculo y el correo */
+/* Todos los campos como objeto plano, para el correo */
 function collect() {
   const out = {};
   SECTIONS.forEach(s => s.fields.forEach(f => { out[f.n] = val(f.n); }));
-  out.ackReglamento = document.getElementById('ackReglamento').checked ? 'Sí' : 'No';
-  out.ackCredito = document.getElementById('ackCredito').checked ? 'Sí' : 'No';
-  out.ackComercial = document.getElementById('ackComercial').checked ? 'Sí' : 'No';
+
+  const medio = val('medioCorrespondencia');
+  out.medioCorrespondencia = medio;
+  out.dirCorrespondencia = (medio === 'Dirección física')
+    ? (val('mismaDireccion') === 'Sí' ? val('dirResidencia') : val('dirCorrespondencia'))
+    : '';
+  out.correoCorrespondencia = (medio === 'Correo electrónico') ? val('correoCorrespondencia') : '';
+  out.whatsapp = (medio === 'WhatsApp') ? val('whatsapp') : '';
+
+  out.ackAutorizacion = document.getElementById('ackAutorizacion').checked ? 'Sí' : 'No';
   out.folio = folioActual();
   out.generado = new Date().toLocaleString('es-CO', { dateStyle: 'short', timeStyle: 'short' });
   return out;
@@ -1543,7 +1203,7 @@ btnSend.addEventListener('click', async () => {
     pdfBase64: pdf.output('datauristring').split(',')[1]
   };
 
-  setStatus('Enviando su solicitud…');
+  setStatus('Enviando su actualización…');
   try {
     const j = await post(payload);
     pendiente = null;
@@ -1562,11 +1222,11 @@ btnSend.addEventListener('click', async () => {
 function confirmar(folio) {
   document.querySelector('main').innerHTML =
     '<div class="done">'
-    + '<h2>Solicitud enviada</h2>'
-    + '<p>Recibimos su solicitud de Crédito Sterling. Nuestro equipo revisará la información y le informaremos la decisión.</p>'
+    + '<h2>Actualización enviada</h2>'
+    + '<p>Recibimos la actualización de sus datos de Crédito Sterling. Nuestro equipo la procesará a la brevedad.</p>'
     + '<div class="flabel2">Número de radicado</div>'
     + '<div class="folio">' + esc(folio) + '</div>'
-    + '<p>Guarde este número por si necesita consultar el estado de su solicitud.</p>'
+    + '<p>Guarde este número por si necesita consultar el estado de su actualización.</p>'
     + '</div>';
   document.querySelector('.actions').style.display = 'none';
   document.querySelector('.progressbar').style.display = 'none';
@@ -1596,17 +1256,16 @@ document.getElementById('btnClear').addEventListener('click', () => {
   if (!confirm('¿Borrar todo lo que ha escrito?')) return;
   form.reset();
   document.querySelectorAll('[type=checkbox]').forEach(c => c.checked = false);
-  document.querySelectorAll('.fnac select').forEach(sel => sel.value = '');
-  const fn = form.querySelector('[name=nacimiento]'); if (fn) fn.value = '';
   document.querySelectorAll('.field.invalid').forEach(f => f.classList.remove('invalid'));
   document.querySelectorAll('.check.missing').forEach(f => f.classList.remove('missing'));
-  if (fFecha) fFecha.value = iso;
   pendiente = null;
   btnRetry.hidden = true;
   updateCard(); updateProgress(); setStatus('');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
+actualizarCorrespondencia();
+if (fFecha) fFecha.value = iso;
 updateCard();
 updateProgress();
 </script>
