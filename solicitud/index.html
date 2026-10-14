@@ -404,6 +404,7 @@ button{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transfor
 .idsec .idgrid{display:grid;grid-template-columns:1fr 1fr;gap:0}
 .idslot{padding:18px 24px 20px;border-right:1px solid var(--rule)}
 .idslot:last-child{border-right:none}
+.idslot[hidden]{display:none}
 .idslot .flabel{display:block;font-size:9.5px;letter-spacing:.19em;text-transform:uppercase;color:var(--label);margin-bottom:10px}
 .idslot .flabel b{color:var(--sterling-red);font-weight:400}
 .idprev{height:150px;border:1px dashed #cfcac2;background:#faf9f7;display:flex;align-items:center;justify-content:center;
@@ -488,7 +489,7 @@ button{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transfor
   <section class="section idsec" id="secCedula">
     <header>
       <h2>Documento de identidad</h2>
-      <span class="hint">Foto de su cédula por ambos lados</span>
+      <span class="hint" id="secCedulaHint">Foto de su documento por ambos lados</span>
     </header>
     <div class="idgrid">
       <div class="idslot" id="slot_frente" data-lado="frente">
@@ -516,7 +517,7 @@ button{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transfor
         <input type="file" accept="image/*,application/pdf" data-input="archivo" hidden>
       </div>
     </div>
-    <p class="idnote">Ubique la cédula sobre una superficie oscura, con buena luz y sin reflejos, y verifique que se lean todos los datos. Puede subir una foto (JPG, PNG) o un PDF.</p>
+    <p class="idnote">Ubique el documento sobre una superficie oscura, con buena luz y sin reflejos, y verifique que se lean todos los datos. Puede subir una foto (JPG, PNG) o un PDF.</p>
   </section>
 
   <div class="camwrap" id="camWrap" hidden>
@@ -670,7 +671,8 @@ const ALMACENES = [
     { c:"ma-ctg-cen", n:"Cartagena · Centro Histórico" },
     { c:"ma-chi",     n:"Chía · Malva Shoe Shop - Fontanar" },
     { c:"ma-med",     n:"Medellín · C.C. El Tesoro" },
-    { c:"ma-sop",     n:"Sopó · Malva Sopó" }
+    { c:"ma-sop",     n:"Sopó · Malva Sopó" },
+    { c:"ma-vil",     n:"Villavicencio · C.C. Viva Villavicencio" }
   ]},
   { m:"Tiffany", t:[
     { c:"ti-bog",     n:"Bogotá · Andino Mall" }
@@ -678,6 +680,7 @@ const ALMACENES = [
   { m:"Carolina Herrera", t:[
     { c:"ch-baq",     n:"Barranquilla · CH Barranquilla" },
     { c:"ch-bog",     n:"Bogotá · CH Casa Herrera Bogotá" },
+    { c:"ch-bog-aer", n:"Bogotá · CH Aeropuerto El Dorado" },
     { c:"ch-buc",     n:"Bucaramanga · CH Bucaramanga" },
     { c:"ch-cal",     n:"Cali · CH Unicentro" },
     { c:"ch-ctg",     n:"Cartagena · CH La Serrezuela" },
@@ -688,8 +691,16 @@ const ALMACENES = [
     { c:"pg-baq",     n:"Barranquilla · PG Barranquilla" },
     { c:"pg-bog-ret", n:"Bogotá · PG C.C. El Retiro" },
     { c:"pg-bog-col", n:"Bogotá · PG C.C. Parque La Colina" },
+    { c:"pg-bog-gra", n:"Bogotá · PG Gran Estación" },
     { c:"pg-ctg",     n:"Cartagena · PG C.C. La Serrezuela" },
+    { c:"pg-med",     n:"Medellín · PG El Tesoro" },
     { c:"pg-sop",     n:"Sopó · PG Outlet C.C. Arauco Sopó" }
+  ]},
+  { m:"Farm Rio", t:[
+    { c:"fr-baq",     n:"Barranquilla · C.C. Mallplaza Buenavista" }
+  ]},
+  { m:"Zadig & Voltaire", t:[
+    { c:"zv-med",     n:"Medellín · C.C. El Tesoro" }
   ]}
 ];
 
@@ -706,7 +717,10 @@ const SECTIONS = [
   { id:'personales', title:'Datos personales', fields:[
     { n:'nombres', l:'Nombres', w:4, req:true },
     { n:'apellidos', l:'Apellidos', w:4, req:true },
-    { n:'cc', l:'Número de identificación', w:4, req:true, num:true },
+    { n:'tipoId', l:'Tipo de identificación', t:'select', w:1, req:true,
+      opts:[{ v:'', t:'Seleccione…' }, { v:'CC', t:'CC · Cédula de ciudadanía' },
+            { v:'CE', t:'CE · Cédula de extranjería' }, { v:'PA', t:'PA · Pasaporte' }] },
+    { n:'cc', l:'Número de identificación', w:3, req:true, num:true },
     { n:'nacimiento', l:'Fecha de nacimiento', t:'fnac', w:4, req:true },
     { n:'celular', l:'Celular', t:'tel', w:4, req:true, num:true, len:10 },
     { n:'telefono', l:'Teléfono fijo', t:'tel', w:4, num:true, len:10 },
@@ -723,6 +737,7 @@ const SECTIONS = [
     { n:'telEmpresa', l:'Teléfono de la empresa', t:'tel', w:4, req:true, num:true, len:10,
       h:'Si es independiente, el teléfono de su contador' },
     { n:'dirEmpresa', l:'Dirección de la empresa', w:4, req:true },
+    { n:'ciudadEmpresa', l:'Ciudad de la empresa', w:4, req:true },
     { n:'cargo', l:'Cargo', w:4, req:true },
     { n:'profesion', l:'Profesión', w:4, req:true },
     { n:'antiguedad', l:'Antigüedad', w:4, req:true, h:'Tiempo que lleva en la empresa' },
@@ -857,7 +872,11 @@ SECTIONS.forEach(sec => {
       html += '</select>';
     } else if (f.t === 'select') {
       html += '<label for="' + id + '">' + esc(f.l) + '</label><select id="' + id + '" name="' + f.n + '">';
-      f.opts.forEach(o => { html += '<option value="' + esc(o) + '">' + (o ? esc(o) : 'Seleccione…') + '</option>'; });
+      f.opts.forEach(o => {
+        const v = typeof o === 'object' ? o.v : o;
+        const t = typeof o === 'object' ? o.t : (o || 'Seleccione…');
+        html += '<option value="' + esc(v) + '">' + esc(t) + '</option>';
+      });
       html += '</select>';
     } else if (f.t === 'money') {
       html += '<label for="' + id + '">' + esc(f.l) + '</label><div class="money"><span class="cur">COP</span>'
@@ -993,6 +1012,8 @@ form.addEventListener('input', e => {
   if (el.hasAttribute('data-money')) {
     const d = digits(el.value);
     el.value = d ? nf.format(Number(d)) : '';
+  } else if (el.hasAttribute('data-alnum')) {
+    el.value = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
   } else if (el.hasAttribute('data-num')) {
     el.value = digits(el.value);
   }
@@ -1033,7 +1054,50 @@ var CED = { frente: null, reverso: null };   // { name, type, base64 }
 const CED_MAX_LADO = 1600;
 const CED_MAX_PDF = 4 * 1024 * 1024;
 
-function cedulaListas() { return CED ? (CED.frente ? 1 : 0) + (CED.reverso ? 1 : 0) : 0; }
+function esPasaporte() {
+  const el = document.querySelector('[name="tipoId"]');
+  return !!el && el.value === 'PA';
+}
+function ladosRequeridos() { return esPasaporte() ? ['frente'] : ['frente', 'reverso']; }
+function cedulaListas() { return CED ? ladosRequeridos().filter(l => CED[l]).length : 0; }
+
+/* Ajusta el número de identificación y las fotos al tipo de documento */
+function aplicarTipoDocumento() {
+  const tipo = (document.querySelector('[name="tipoId"]') || {}).value || '';
+  const cc = document.querySelector('[name="cc"]');
+  if (cc) {
+    if (tipo === 'PA') {
+      cc.removeAttribute('data-num'); cc.setAttribute('data-alnum', '');
+      cc.setAttribute('inputmode', 'text'); cc.setAttribute('autocapitalize', 'characters');
+      cc.value = cc.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    } else {
+      cc.removeAttribute('data-alnum'); cc.setAttribute('data-num', '');
+      cc.setAttribute('inputmode', 'numeric');
+      cc.value = digits(cc.value);
+    }
+  }
+  const nombreDoc = tipo === 'CE' ? 'Cédula de extranjería' : tipo === 'PA' ? 'Pasaporte' : 'Cédula';
+  const fr = document.getElementById('slot_frente');
+  const rv = document.getElementById('slot_reverso');
+  if (!fr || !rv) return;
+  if (tipo === 'PA') {
+    fr.querySelector('.flabel').innerHTML = 'Pasaporte · página de datos <b>*</b>';
+    fr.querySelector('.err').textContent = 'Agregue la foto de la página de datos del pasaporte';
+    rv.hidden = true;
+    CED.reverso = null; pintarSlot('reverso'); rv.classList.remove('invalid');
+    document.getElementById('secCedulaHint').textContent = 'Foto de la página de datos de su pasaporte';
+  } else {
+    fr.querySelector('.flabel').innerHTML = nombreDoc + ' · parte delantera <b>*</b>';
+    rv.querySelector('.flabel').innerHTML = nombreDoc + ' · parte trasera <b>*</b>';
+    fr.querySelector('.err').textContent = 'Agregue la foto de la parte delantera';
+    rv.hidden = false;
+    document.getElementById('secCedulaHint').textContent = 'Foto de su documento por ambos lados';
+  }
+  updateProgress();
+}
+document.addEventListener('change', e => {
+  if (e.target && e.target.name === 'tipoId') aplicarTipoDocumento();
+});
 
 const esMovil = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
   || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
@@ -1184,7 +1248,7 @@ function updateProgress() {
   const done = REQUIRED.filter(n => val(n)).length;
   const consents = ['ackReglamento', 'ackCredito'].filter(id => document.getElementById(id).checked).length;
   const fotos = cedulaListas();
-  const total = REQUIRED.length + 2 + 2;
+  const total = REQUIRED.length + 2 + ladosRequeridos().length;
   const pct = Math.round(((done + consents + fotos) / total) * 100);
   document.getElementById('progressFill').style.width = pct + '%';
   document.getElementById('progressLabel').textContent = (done + consents + fotos) + ' de ' + total + ' requisitos completos';
@@ -1243,10 +1307,12 @@ function validate() {
   });
 
   /* Cédula por ambos lados */
+  const lados = ladosRequeridos();
   ['frente', 'reverso'].forEach(lado => {
     const slot = document.getElementById('slot_' + lado);
-    slot.classList.toggle('invalid', !CED[lado]);
-    if (!CED[lado] && !firstBad) firstBad = slot;
+    const falta = lados.includes(lado) && !CED[lado];
+    slot.classList.toggle('invalid', falta);
+    if (falta && !firstBad) firstBad = slot;
   });
 
   let consentMissing = false;
@@ -1261,7 +1327,7 @@ function validate() {
     setStatus(document.querySelector('.field.invalid')
       ? 'Complete los campos marcados en rojo.'
       : document.querySelector('.idslot.invalid')
-        ? 'Falta la foto de su cédula por ambos lados.'
+        ? 'Falta la foto de su documento de identidad.'
         : 'Falta marcar las autorizaciones obligatorias.', true);
     return false;
   }
@@ -1282,6 +1348,7 @@ function setStatus(msg, bad) {
 /* Generador de PDF vectorial — texto real, seleccionable */
 
 function construirPDF(jsPDF, D, opciones) {
+  const siglaId = ({ CC: 'C.C.', CE: 'C.E.', PA: 'Pasaporte' })[D.tipoId] || 'C.C.';
   const {
     LOGO, REGLAMENTO_TITULO, REGLAMENTO, REGLAMENTO_FINALIDADES,
     REGLAMENTO_CIERRE, LEGAL, folio, stamp
@@ -1356,8 +1423,15 @@ function construirPDF(jsPDF, D, opciones) {
     regla(y - 11, 0.5, LINEA);
     setT(6.2, GRIS);
     doc.setCharSpace(1.1);
-    doc.text('STERLING DE COLOMBIA S.A.  ·  NIT 860.048.245-5  ·  SOLICITUD CRÉDITO  ·  '
-      + nombre + '  ·  C.C. ' + dash(D.cc), ML, y);
+    /* El pie no puede invadir el número de página: si el nombre es largo, se recorta */
+    const base = 'STERLING DE COLOMBIA S.A.  ·  NIT 860.048.245-5  ·  SOLICITUD CRÉDITO  ·  ';
+    const cola = '  ·  ' + (D.tipoId || 'CC') + ' ' + dash(D.cc);
+    const ancho = t => (doc.getTextWidth(t) * 1.08) + t.length * 1.1;
+    const limite = CW - 45;
+    let nom = String(nombre);
+    while (nom.length > 4 && ancho(base + nom + cola) > limite) nom = nom.slice(0, -1);
+    if (nom !== String(nombre)) nom = nom.trim() + '…';
+    doc.text(base + nom + cola, ML, y);
     doc.setCharSpace(0);
   }
 
@@ -1452,8 +1526,9 @@ function construirPDF(jsPDF, D, opciones) {
   y = filas([
     ['Nombres', dash(D.nombres), 2], ['Apellidos', dash(D.apellidos), 2],
     ['Número de identificación', dash(D.cc), 2],
+    ['Tipo de identificación', dash(D.tipoId), 1],
     ['Fecha de nacimiento', fdate(D.nacimiento), 2], ['Celular', dash(D.celular), 2],
-    ['Teléfono fijo', dash(D.telefono), 2],
+    ['Teléfono fijo', dash(D.telefono), 1],
     ['Email', dash(D.email), 4], ['Ciudad', dash(D.ciudad), 2],
     ['Dirección de residencia', dash(D.dirResidencia), 3],
     ['Dirección de correspondencia', dash(D.dirCorrespondencia), 3],
@@ -1464,8 +1539,8 @@ function construirPDF(jsPDF, D, opciones) {
   y = filas([
     ['Empresa', dash(D.empresa), 2], ['Teléfono empresa / contador', dash(D.telEmpresa), 2],
     ['Trabaja como independiente', dash(D.independiente), 2],
-    ['Dirección de la empresa', dash(D.dirEmpresa), 2], ['Cargo', dash(D.cargo), 2],
-    ['Profesión', dash(D.profesion), 2],
+    ['Dirección de la empresa', dash(D.dirEmpresa), 4], ['Ciudad de la empresa', dash(D.ciudadEmpresa), 2],
+    ['Cargo', dash(D.cargo), 2], ['Profesión', dash(D.profesion), 2],
     ['Antigüedad', dash(D.antiguedad), 2], ['Sueldo mensual', money(D.sueldo), 2],
     ['Otros ingresos', money(D.otrosIngresos), 2],
     ['Concepto de otros ingresos', dash(D.conceptoOtros), 6]
@@ -1637,7 +1712,7 @@ function construirPDF(jsPDF, D, opciones) {
   doc.setCharSpace(0);
   setT(8.4, NEGRO);
   doc.text(nombre, ML, yLinea + 24);
-  doc.text('C.C. ' + dash(D.cc), ML, yLinea + 35);
+  doc.text(siglaId + ' ' + dash(D.cc), ML, yLinea + 35);
 
   if (tieneConjunta) {
     const x2 = ML + anchoFirma + 40;
@@ -1685,10 +1760,10 @@ function construirPDF(jsPDF, D, opciones) {
   return doc;
 }
 
-const folioActual = () => 'ST-' + iso.replace(/-/g, '') + '-' + (digits(val('cc')).slice(-4) || '0000');
+const folioActual = () => 'ST-' + iso.replace(/-/g, '') + '-' + (val('cc').replace(/[^0-9A-Za-z]/g, '').toUpperCase().slice(-4) || '0000');
 const fileName = () => 'Solicitud_Credito_Sterling_'
   + (val('apellidos') || 'Cliente').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z]/g, '')
-  + '_' + (digits(val('cc')) || 'SC') + '.pdf';
+  + '_' + (val('cc').replace(/[^0-9A-Za-z]/g, '').toUpperCase() || 'SC') + '.pdf';
 
 function logoPDF() {
   const v = getComputedStyle(document.documentElement).getPropertyValue('--logo-negro');
@@ -1780,7 +1855,7 @@ btnSend.addEventListener('click', async () => {
     pdfBase64: pdf.output('datauristring').split(',')[1],
     cedula: {
       frente: CED.frente,
-      reverso: CED.reverso
+      reverso: esPasaporte() ? null : CED.reverso
     }
   };
 
@@ -1843,6 +1918,7 @@ document.getElementById('btnClear').addEventListener('click', () => {
   document.querySelectorAll('.check.missing').forEach(f => f.classList.remove('missing'));
   if (fFecha) fFecha.value = iso;
   limpiarCedula();
+  aplicarTipoDocumento();
   pendiente = null;
   btnRetry.hidden = true;
   updateCard(); updateProgress(); setStatus('');
