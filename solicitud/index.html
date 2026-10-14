@@ -399,6 +399,37 @@ button{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transfor
 .signote{font-size:8.5px;color:#333;border-top:.8px solid #000;margin-top:16px;padding-top:9px;line-height:1.6}
 .regsign .sigs{margin-top:16px}
 .regsign .sigline .ln{height:34px}
+
+/* ---------- cédula ---------- */
+.idsec .idgrid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.idslot{padding:18px 24px 20px;border-right:1px solid var(--rule)}
+.idslot:last-child{border-right:none}
+.idslot .flabel{display:block;font-size:9.5px;letter-spacing:.19em;text-transform:uppercase;color:var(--label);margin-bottom:10px}
+.idslot .flabel b{color:var(--sterling-red);font-weight:400}
+.idprev{height:150px;border:1px dashed #cfcac2;background:#faf9f7;display:flex;align-items:center;justify-content:center;
+  text-align:center;color:var(--label);font-size:12px;padding:10px;margin-bottom:12px;overflow:hidden}
+.idprev img{max-width:100%;max-height:100%;object-fit:contain}
+.idprev.ok{border-style:solid;border-color:var(--rule);background:#fff}
+.idbtns{display:flex;gap:8px;flex-wrap:wrap}
+.idbtns button{font:inherit;font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:10px 14px;cursor:pointer;
+  border:1px solid var(--ink);background:var(--ink);color:#fff}
+.idbtns button.alt{background:#fff;color:var(--ink)}
+.idbtns button.quitar{background:none;border-color:transparent;color:var(--label);padding:10px 6px;text-decoration:underline}
+.idslot .err{display:none;color:var(--sterling-red);font-size:11.5px;margin-top:8px}
+.idslot.invalid .idprev{border-color:var(--sterling-red)}
+.idslot.invalid .err{display:block}
+.idnote{padding:0 24px 16px;font-size:12px;color:var(--label);line-height:1.5}
+@media (max-width:720px){
+  .idsec .idgrid{grid-template-columns:1fr}
+  .idslot{border-right:none;border-bottom:1px solid var(--rule)}
+  .idslot:last-child{border-bottom:none}
+}
+.camwrap{position:fixed;inset:0;z-index:100;background:rgba(10,10,12,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.camwrap[hidden]{display:none}
+.camwrap video{max-width:100%;max-height:70vh;background:#000}
+.camwrap .camtxt{color:#fff;font-size:13px;margin:0 0 12px;text-align:center}
+.camwrap .idbtns{margin-top:16px;justify-content:center}
+.camwrap .idbtns button.alt{background:transparent;color:#fff;border-color:#fff}
 </style>
 
 <div class="masthead">
@@ -453,6 +484,49 @@ button{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transfor
 
 <main>
   <form id="app" novalidate></form>
+
+  <section class="section idsec" id="secCedula">
+    <header>
+      <h2>Documento de identidad</h2>
+      <span class="hint">Foto de su cédula por ambos lados</span>
+    </header>
+    <div class="idgrid">
+      <div class="idslot" id="slot_frente" data-lado="frente">
+        <span class="flabel">Cédula · parte delantera <b>*</b></span>
+        <div class="idprev">Aún no ha agregado la foto</div>
+        <div class="idbtns">
+          <button type="button" data-accion="camara">Tomar foto</button>
+          <button type="button" class="alt" data-accion="archivo">Subir archivo</button>
+          <button type="button" class="quitar" data-accion="quitar" hidden>Quitar</button>
+        </div>
+        <div class="err">Agregue la foto de la parte delantera</div>
+        <input type="file" accept="image/*" capture="environment" data-input="camara" hidden>
+        <input type="file" accept="image/*,application/pdf" data-input="archivo" hidden>
+      </div>
+      <div class="idslot" id="slot_reverso" data-lado="reverso">
+        <span class="flabel">Cédula · parte trasera <b>*</b></span>
+        <div class="idprev">Aún no ha agregado la foto</div>
+        <div class="idbtns">
+          <button type="button" data-accion="camara">Tomar foto</button>
+          <button type="button" class="alt" data-accion="archivo">Subir archivo</button>
+          <button type="button" class="quitar" data-accion="quitar" hidden>Quitar</button>
+        </div>
+        <div class="err">Agregue la foto de la parte trasera</div>
+        <input type="file" accept="image/*" capture="environment" data-input="camara" hidden>
+        <input type="file" accept="image/*,application/pdf" data-input="archivo" hidden>
+      </div>
+    </div>
+    <p class="idnote">Ubique la cédula sobre una superficie oscura, con buena luz y sin reflejos, y verifique que se lean todos los datos. Puede subir una foto (JPG, PNG) o un PDF.</p>
+  </section>
+
+  <div class="camwrap" id="camWrap" hidden>
+    <p class="camtxt" id="camTxt">Encuadre la cédula y presione Capturar</p>
+    <video id="camVideo" autoplay playsinline muted></video>
+    <div class="idbtns">
+      <button type="button" id="camShot">Capturar</button>
+      <button type="button" class="alt" id="camCancel">Cancelar</button>
+    </div>
+  </div>
 
   <div class="reg">
     <header>
@@ -950,16 +1024,170 @@ const val = n => {
   return (el.value || '').trim();
 };
 
+/* ------------------------------------------------------------------
+   Cédula: foto delantera y trasera (cámara del celular o del
+   computador, o archivo). Las imágenes se reducen a ~1600 px en JPEG
+   para que el envío sea liviano.
+------------------------------------------------------------------ */
+var CED = { frente: null, reverso: null };   // { name, type, base64 }
+const CED_MAX_LADO = 1600;
+const CED_MAX_PDF = 4 * 1024 * 1024;
+
+function cedulaListas() { return CED ? (CED.frente ? 1 : 0) + (CED.reverso ? 1 : 0) : 0; }
+
+const esMovil = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+  || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+
+function leerComoDataURL(file) {
+  return new Promise((ok, mal) => {
+    const r = new FileReader();
+    r.onload = () => ok(r.result);
+    r.onerror = () => mal(r.error);
+    r.readAsDataURL(file);
+  });
+}
+
+function cargarImagen(src) {
+  return new Promise((ok, mal) => {
+    const im = new Image();
+    im.onload = () => ok(im);
+    im.onerror = () => mal(new Error('imagen'));
+    im.src = src;
+  });
+}
+
+/* Reduce y convierte a JPEG desde cualquier fuente dibujable */
+function aJpeg(fuente, ancho, alto) {
+  const k = Math.min(1, CED_MAX_LADO / Math.max(ancho, alto));
+  const c = document.createElement('canvas');
+  c.width = Math.round(ancho * k); c.height = Math.round(alto * k);
+  const g = c.getContext('2d');
+  g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+  g.drawImage(fuente, 0, 0, c.width, c.height);
+  return c.toDataURL('image/jpeg', 0.82);
+}
+
+function pintarSlot(lado) {
+  const slot = document.getElementById('slot_' + lado);
+  const prev = slot.querySelector('.idprev');
+  const d = CED[lado];
+  slot.querySelector('[data-accion=quitar]').hidden = !d;
+  prev.classList.toggle('ok', !!d);
+  if (!d) { prev.textContent = 'Aún no ha agregado la foto'; return; }
+  slot.classList.remove('invalid');
+  if (d.type === 'application/pdf') {
+    prev.textContent = 'PDF cargado · ' + d.name;
+  } else {
+    prev.innerHTML = '';
+    const im = document.createElement('img');
+    im.alt = 'Cédula ' + lado;
+    im.src = 'data:' + d.type + ';base64,' + d.base64;
+    prev.appendChild(im);
+  }
+}
+
+function guardarCedula(lado, dataUrl, type, ext) {
+  CED[lado] = { name: 'cedula-' + lado + '.' + ext, type: type, base64: dataUrl.split(',')[1] };
+  pintarSlot(lado);
+  updateProgress();
+}
+
+async function procesarArchivo(lado, file) {
+  if (!file) return;
+  try {
+    if (file.type === 'application/pdf') {
+      if (file.size > CED_MAX_PDF) { setStatus('El PDF de la cédula pesa más de 4 MB. Suba una foto en su lugar.', true); return; }
+      guardarCedula(lado, await leerComoDataURL(file), 'application/pdf', 'pdf');
+      return;
+    }
+    const url = await leerComoDataURL(file);
+    let im;
+    try { im = await cargarImagen(url); }
+    catch (e) { setStatus('No pudimos abrir esa imagen. Intente con otra foto (JPG o PNG).', true); return; }
+    guardarCedula(lado, aJpeg(im, im.naturalWidth, im.naturalHeight), 'image/jpeg', 'jpg');
+    setStatus('');
+  } catch (e) {
+    console.error(e);
+    setStatus('No pudimos leer el archivo. Intente de nuevo.', true);
+  }
+}
+
+/* Cámara del computador (getUserMedia) */
+let camStream = null, camLado = null;
+const camWrap = document.getElementById('camWrap');
+const camVideo = document.getElementById('camVideo');
+
+function cerrarCamara() {
+  if (camStream) camStream.getTracks().forEach(t => t.stop());
+  camStream = null; camLado = null;
+  camVideo.srcObject = null;
+  camWrap.hidden = true;
+}
+
+async function abrirCamara(lado) {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return false;
+  try {
+    camStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } }, audio: false
+    });
+  } catch (e) {
+    console.warn(e);
+    return false;
+  }
+  camLado = lado;
+  document.getElementById('camTxt').textContent =
+    'Encuadre la parte ' + (lado === 'frente' ? 'delantera' : 'trasera') + ' de la cédula y presione Capturar';
+  camVideo.srcObject = camStream;
+  camWrap.hidden = false;
+  return true;
+}
+
+document.getElementById('camShot').addEventListener('click', () => {
+  if (!camLado || !camVideo.videoWidth) return;
+  guardarCedula(camLado, aJpeg(camVideo, camVideo.videoWidth, camVideo.videoHeight), 'image/jpeg', 'jpg');
+  cerrarCamara();
+});
+document.getElementById('camCancel').addEventListener('click', cerrarCamara);
+
+document.querySelectorAll('.idslot').forEach(slot => {
+  const lado = slot.dataset.lado;
+  const inCam = slot.querySelector('[data-input=camara]');
+  const inArc = slot.querySelector('[data-input=archivo]');
+  [inCam, inArc].forEach(inp => inp.addEventListener('change', () => {
+    procesarArchivo(lado, inp.files && inp.files[0]);
+    inp.value = '';
+  }));
+  slot.querySelector('[data-accion=archivo]').addEventListener('click', () => inArc.click());
+  slot.querySelector('[data-accion=camara]').addEventListener('click', async () => {
+    if (esMovil()) { inCam.click(); return; }
+    const ok = await abrirCamara(lado);
+    if (!ok) {
+      setStatus('No pudimos abrir la cámara de este equipo. Puede subir la foto como archivo.', true);
+      inArc.click();
+    }
+  });
+  slot.querySelector('[data-accion=quitar]').addEventListener('click', () => {
+    CED[lado] = null; pintarSlot(lado); updateProgress();
+  });
+});
+
+function limpiarCedula() {
+  CED.frente = null; CED.reverso = null;
+  pintarSlot('frente'); pintarSlot('reverso');
+  document.querySelectorAll('.idslot').forEach(s => s.classList.remove('invalid'));
+}
+
 const REQUIRED = SECTIONS.flatMap(s => s.fields.filter(f => f.req).map(f => f.n));
 const CON_LONGITUD = SECTIONS.flatMap(s => s.fields.filter(f => f.len));
 
 function updateProgress() {
   const done = REQUIRED.filter(n => val(n)).length;
   const consents = ['ackReglamento', 'ackCredito'].filter(id => document.getElementById(id).checked).length;
-  const total = REQUIRED.length + 2;
-  const pct = Math.round(((done + consents) / total) * 100);
+  const fotos = cedulaListas();
+  const total = REQUIRED.length + 2 + 2;
+  const pct = Math.round(((done + consents + fotos) / total) * 100);
   document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent = (done + consents) + ' de ' + total + ' requisitos completos';
+  document.getElementById('progressLabel').textContent = (done + consents + fotos) + ' de ' + total + ' requisitos completos';
 }
 document.querySelectorAll('[data-consent]').forEach(c => c.addEventListener('change', () => {
   const w = c.closest('.check'); if (c.checked) w.classList.remove('missing');
@@ -1014,6 +1242,13 @@ function validate() {
     }
   });
 
+  /* Cédula por ambos lados */
+  ['frente', 'reverso'].forEach(lado => {
+    const slot = document.getElementById('slot_' + lado);
+    slot.classList.toggle('invalid', !CED[lado]);
+    if (!CED[lado] && !firstBad) firstBad = slot;
+  });
+
   let consentMissing = false;
   ['ackReglamento', 'ackCredito'].forEach(id => {
     const c = document.getElementById(id);
@@ -1023,9 +1258,11 @@ function validate() {
 
   if (firstBad) {
     firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setStatus(consentMissing && !document.querySelector('.field.invalid')
-      ? 'Falta marcar las autorizaciones obligatorias.'
-      : 'Complete los campos marcados en rojo.', true);
+    setStatus(document.querySelector('.field.invalid')
+      ? 'Complete los campos marcados en rojo.'
+      : document.querySelector('.idslot.invalid')
+        ? 'Falta la foto de su cédula por ambos lados.'
+        : 'Falta marcar las autorizaciones obligatorias.', true);
     return false;
   }
   return true;
@@ -1540,7 +1777,11 @@ btnSend.addEventListener('click', async () => {
     filename: name,
     folio: folioActual(),
     datos: collect(),
-    pdfBase64: pdf.output('datauristring').split(',')[1]
+    pdfBase64: pdf.output('datauristring').split(',')[1],
+    cedula: {
+      frente: CED.frente,
+      reverso: CED.reverso
+    }
   };
 
   setStatus('Enviando su solicitud…');
@@ -1601,6 +1842,7 @@ document.getElementById('btnClear').addEventListener('click', () => {
   document.querySelectorAll('.field.invalid').forEach(f => f.classList.remove('invalid'));
   document.querySelectorAll('.check.missing').forEach(f => f.classList.remove('missing'));
   if (fFecha) fFecha.value = iso;
+  limpiarCedula();
   pendiente = null;
   btnRetry.hidden = true;
   updateCard(); updateProgress(); setStatus('');
