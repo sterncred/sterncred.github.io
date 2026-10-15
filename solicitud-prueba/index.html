@@ -1959,7 +1959,8 @@ updateProgress();
 
 /* Regreso desde Signio después de firmar */
 if (new URLSearchParams(location.search).has('firmado')) {
-  const fol = new URLSearchParams(location.search).get('folio') || '';
+  /* Signio agrega "?idSobre=…" al final de la dirección de regreso: se descarta */
+  const fol = (new URLSearchParams(location.search).get('folio') || '').split('?')[0];
   document.querySelector('main').innerHTML =
     '<div class="done"><h2>Solicitud firmada</h2>'
     + '<p>Gracias. Su solicitud de Crédito Sterling quedó firmada y radicada. Nuestro equipo la revisará y le informaremos la decisión.</p>'
