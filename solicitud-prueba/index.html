@@ -1901,7 +1901,7 @@ function confirmar(folio, firma) {
       ? '<h2>Abriendo la firma…</h2>'
         + '<p>Lo estamos llevando a Signio para firmar su solicitud. Allí se registrará, se tomará una foto y firmará. '
         + 'Su solicitud se radica cuando termine de firmar.</p>'
-        + '<a class="btn-primary btn-firmar" href="' + esc(url) + '">Ir a firmar</a>'
+        + '<a class="btn-primary btn-firmar" id="btnIrFirmar" href="' + esc(url) + '">Ir a firmar</a>'
         + '<p class="nota">Si no se abre sola, toque el botón. También le enviamos un correo de Signio para firmar desde allí.</p>'
       : sobre
         ? '<h2>Revise su correo para firmar</h2>'
@@ -1915,7 +1915,20 @@ function confirmar(folio, firma) {
   document.querySelector('.actions').style.display = 'none';
   document.querySelector('.progressbar').style.display = 'none';
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  if (url) setTimeout(() => { location.href = url; }, 1200);
+  if (url) {
+    /* El enlace de Signio se abre UNA sola vez (puede ser de un solo uso) */
+    let abierto = false;
+    const ir = () => {
+      if (abierto) return;
+      abierto = true;
+      const b = document.getElementById('btnIrFirmar');
+      if (b) { b.textContent = 'Abriendo…'; b.style.pointerEvents = 'none'; b.style.opacity = '.6'; }
+      location.replace(url);
+    };
+    const b = document.getElementById('btnIrFirmar');
+    if (b) b.addEventListener('click', e => { e.preventDefault(); ir(); });
+    setTimeout(ir, 1200);
+  }
 }
 
 /* Reintento sin regenerar el PDF */
