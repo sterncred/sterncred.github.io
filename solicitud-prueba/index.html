@@ -1718,7 +1718,12 @@ function construirPDF(jsPDF, D, opciones) {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(3);
   doc.setTextColor(255, 255, 255);
-  doc.text('{{SigIDType:cliente:' + tipoSignio + '}} {{SigID:cliente:' + idSignio + '}} {{SigOrder:cliente:1}}', ML, yLinea - 60);
+  /* Nombre, correo y celular: Signio los necesita para crear al firmante si es nuevo */
+  const nombreSignio = ((D.nombres || '') + ' ' + (D.apellidos || '')).replace(/\s+/g, ' ').trim().slice(0, 50);
+  const celSignio = String(D.celular || '').replace(/\D/g, '');
+  doc.text('{{SigName:cliente:' + nombreSignio + '}}', ML, yLinea + 42);
+  doc.text('{{SigEmail:cliente:' + String(D.email || '').trim() + '}}' + (celSignio ? ' {{SigPhone:cliente:' + celSignio + '}}' : ''), ML, yLinea + 46);
+  doc.text('{{SigIDType:cliente:' + tipoSignio + '}} {{SigID:cliente:' + idSignio + '}} {{SigOrder:cliente:1}}', ML, yLinea + 50);
   doc.text('{{SigStamp:cliente:160,48}}', ML, yLinea - 54);
   doc.setDrawColor(NEGRO[0], NEGRO[1], NEGRO[2]);
   doc.setLineWidth(0.7);
