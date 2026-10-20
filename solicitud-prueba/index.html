@@ -436,6 +436,8 @@ button{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transfor
 .pruebabar{background:#b0212f;color:#fff;text-align:center;font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding:8px 12px}
 .done .btn-firmar{display:inline-block;margin:18px 0 6px;text-decoration:none}
 .done .nota{font-size:12.5px;color:var(--label)}
+.pasos-firma{text-align:left;max-width:420px;margin:14px auto 16px;padding-left:22px;line-height:1.55}
+.pasos-firma li{margin:6px 0}
 </style>
 
 <div class="pruebabar">Versión de prueba · firma electrónica con Signio · no usar con clientes</div>
@@ -1903,19 +1905,22 @@ function confirmar(folio, firma) {
   document.querySelector('main').innerHTML =
     '<div class="done">'
     + (url
-      ? '<h2>Abriendo la firma…</h2>'
-        + '<p>Lo estamos llevando a Signio para firmar su solicitud. Allí se registrará, se tomará una foto y firmará. '
-        + 'Su solicitud se radica cuando termine de firmar.</p>'
-        + '<a class="btn-primary btn-firmar" id="btnIrFirmar" href="' + esc(url) + '">Ir a firmar</a>'
-        + '<p class="nota">Si no se abre sola, toque el botón. También le enviamos un correo de Signio para firmar desde allí.</p>'
+      ? '<h2>Último paso: firme su solicitud</h2>'
+        + '<p>Lo vamos a llevar a <strong>Signio</strong>, nuestra plataforma de firma electrónica. '
+        + 'Toma unos <strong>2 minutos</strong>.</p>'
+        + '<p>Su solicitud se radica cuando termine de firmar.</p>'
+        + '<a class="btn-primary btn-firmar" id="btnIrFirmar" href="' + esc(url) + '">Comenzar la firma</a>'
+        + '<p class="nota" id="cuentaFirma">Lo llevaremos automáticamente en <span id="segFirma">10</span> segundos.</p>'
+        + '<p class="nota">También le enviamos un correo de Signio para firmar desde allí si lo prefiere.</p>'
       : sobre
         ? '<h2>Revise su correo para firmar</h2>'
           + '<p>Le enviamos un correo de Signio con el botón <strong>Abrir sobre</strong>. Su solicitud se radica cuando termine de firmar.</p>'
         : '<h2>Solicitud enviada</h2>'
           + '<p>Recibimos su solicitud de Crédito Sterling. Nuestro equipo revisará la información y le informaremos la decisión.</p>')
-    + '<div class="flabel2" style="margin-top:18px">Número de radicado</div>'
-    + '<div class="folio">' + esc(folio) + '</div>'
-    + '<p>Guarde este número por si necesita consultar el estado de su solicitud.</p>'
+    + (url ? '' :
+      '<div class="flabel2" style="margin-top:18px">Número de radicado</div>'
+      + '<div class="folio">' + esc(folio) + '</div>'
+      + '<p>Guarde este número por si necesita consultar el estado de su solicitud.</p>')
     + '</div>';
   document.querySelector('.actions').style.display = 'none';
   document.querySelector('.progressbar').style.display = 'none';
@@ -1932,7 +1937,19 @@ function confirmar(folio, firma) {
     };
     const b = document.getElementById('btnIrFirmar');
     if (b) b.addEventListener('click', e => { e.preventDefault(); ir(); });
-    setTimeout(ir, 1200);
+    /* Cuenta regresiva para que el cliente alcance a leer los pasos */
+    let seg = 10;
+    const reloj = setInterval(() => {
+      seg -= 1;
+      const el = document.getElementById('segFirma');
+      if (el) el.textContent = String(Math.max(seg, 0));
+      if (abierto || seg <= 0) {
+        clearInterval(reloj);
+        const c = document.getElementById('cuentaFirma');
+        if (c) c.textContent = 'Abriendo Signio…';
+        ir();
+      }
+    }, 1000);
   }
 }
 
