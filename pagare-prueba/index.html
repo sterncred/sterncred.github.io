@@ -343,7 +343,7 @@ const DOCS = { CC: { corto: 'C.C. No.', largo: 'la cédula de ciudadanía' }, CE
 
 function generarPDF(d) {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  const doc = new jsPDF({ unit: 'pt', format: 'a4', compress: true });
   const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
   const ML = 56, MR = 56, TOP = 50, BOTTOM = 46, CW = W - ML - MR;
   const T = DOCS[d.tipoId] || DOCS.CC;
@@ -409,7 +409,7 @@ function generarPDF(d) {
   }
 
   /* ---------- Página 1: pagaré ---------- */
-  try { if (LOGO_PDF) doc.addImage(LOGO_PDF, 'PNG', ML, 30, 80, 38); } catch (e) {}
+  try { if (LOGO_PDF) doc.addImage(LOGO_PDF, 'PNG', ML, 30, 80, 38, 'logo', 'FAST'); } catch (e) {}
   y = 84;
   parrafo([['PAGARÉ No. ' + d.numero + ' A FAVOR DE STERLING DE COLOMBIA S.A.', true]], { centrar: true, sz: 11, lh: 15, despues: 10 });
 
@@ -455,7 +455,7 @@ function generarPDF(d) {
 
   /* ---------- Carta de instrucciones (página nueva) ---------- */
   nueva();
-  try { if (LOGO_PDF) doc.addImage(LOGO_PDF, 'PNG', ML, 30, 80, 38); } catch (e) {}
+  try { if (LOGO_PDF) doc.addImage(LOGO_PDF, 'PNG', ML, 30, 80, 38, 'logo', 'FAST'); } catch (e) {}
   y = 84;
   parrafo([['CARTA DE INSTRUCCIONES PARA EL DILIGENCIAMIENTO DEL PAGARÉ No. ' + d.numero, true]], { centrar: true, sz: 11, lh: 15, despues: 12 });
   P('Ciudad y Fecha: ' + d.ciudadFirma + ', ' + d.fecha + '.', { despues: 10 });
