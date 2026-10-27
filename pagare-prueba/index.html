@@ -125,7 +125,7 @@ main{padding:24px 16px 120px}
         <div class="opts"><label><input type="radio" name="foto" value="OB" checked> Obligatoria</label><label><input type="radio" name="foto" value="OP"> Opcional</label></div></div>
       <div class="f"><label>Aviso de Signio al cliente <span class="req">*</span></label>
         <div class="opts"><label><input type="radio" name="canal" value="email" checked> Correo</label><label><input type="radio" name="canal" value="whatsapp"> WhatsApp</label></div></div>
-      <div class="f full"><div class="help" style="margin:0">El cliente puede firmar <strong>a distancia</strong> con el aviso de Signio o <strong>en el almacén</strong> con el enlace que aparece al enviar. Tiene <strong>1 día</strong> para firmar; después el pagaré se suspende. El pagaré firmado llega al correo de solicitudes de crédito.</div></div>
+      <div class="f full"><div class="help" style="margin:0">El cliente puede firmar <strong>a distancia</strong> con el aviso de Signio o <strong>aquí mismo</strong> con el botón «Firmar aquí» que aparece al enviar. Tiene <strong>1 día</strong> para firmar; después el pagaré se suspende. El pagaré firmado llega al correo de solicitudes de crédito.</div></div>
       <div class="f full"><label>Clave de crédito <span class="req">*</span></label><input id="clave" type="password" autocomplete="off"></div>
     </div>
   </section>
@@ -524,8 +524,8 @@ function mostrarEnviado(d, j, canal) {
     '<h2>Pagaré enviado a firma</h2>' +
     '<p>Pagaré <strong>No. ' + esc(d.numero) + '</strong> para <strong>' + esc(d.nombre) + '</strong>.</p>' +
     '<p>Signio le envió al cliente un aviso por <strong>' + (canal === 'whatsapp' ? 'WhatsApp' : 'correo') + '</strong> para firmar a distancia.' +
-    (venceTxt ? ' Tiene plazo hasta el <strong>' + esc(venceTxt) + '</strong>.' : '') + '</p>' +
-    (j.url ? '<a class="btn primary" href="' + esc(j.url) + '" target="_blank" rel="noopener">Firmar ahora en el almacén</a>' +
+    (venceTxt ? ' Tiene plazo hasta el <strong>' + esc(venceTxt.replace(/\.$/, '')) + '</strong>.' : '') + '</p>' +
+    (j.url ? '<a class="btn primary" href="' + esc(j.url) + '" target="_blank" rel="noopener">Firmar aquí</a>' +
       '<div class="aviso">Abra este enlace solo con el cliente presente: es su firma personal. No lo comparta ni lo reenvíe.</div>' : '') +
     '<p style="font-size:13px;margin-top:18px">Cuando el cliente firme, el pagaré firmado llega al correo de solicitudes de crédito.</p>' +
     '<button type="button" class="btn" onclick="location.href=location.pathname">Nuevo pagaré</button>' +
