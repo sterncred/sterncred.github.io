@@ -107,7 +107,7 @@ main{padding:24px 16px 120px}
   <section class="card">
     <h2>3 · Datos del pagaré</h2>
     <div class="grid">
-      <div class="f"><label>Número de pagaré <span class="req">*</span></label><input id="numero" autocomplete="off"><div class="help">Consecutivo de Sterling. Se registra en TEEVO.</div></div>
+      <div class="f"><label>Número de pagaré <span class="req">*</span></label><input id="numero" inputmode="numeric" autocomplete="off"><div class="help">Consecutivo de Sterling, <strong>solo números</strong>. Se registra en TEEVO.</div></div>
       <div class="f"><label>Lugar y fecha de creación</label><input id="fecha" readonly><div class="help">Bogotá D.C., fecha de hoy. La certifica la firma electrónica.</div></div>
       <div class="f"><label>Número de factura <span class="req">*</span></label><input id="factura" autocomplete="off"></div>
       <div class="f"><label>Valor de la factura <span class="req">*</span></label><input id="valorFactura" inputmode="numeric" autocomplete="off" placeholder="$"></div>
@@ -221,6 +221,7 @@ const soloDigitos = s => String(s || '').replace(/\D/g, '');
 const miles = s => soloDigitos(s).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 $('valorFactura').addEventListener('input', e => { e.target.value = miles(e.target.value); });
 $('celular').addEventListener('input', e => { e.target.value = soloDigitos(e.target.value).slice(0, 10); });
+$('numero').addEventListener('input', e => { e.target.value = soloDigitos(e.target.value).slice(0, 15); });
 $('cuotas').addEventListener('input', e => { e.target.value = soloDigitos(e.target.value).slice(0, 3); });
 $('tasa').addEventListener('input', e => { e.target.value = e.target.value.replace(/[^0-9.,]/g, '').replace('.', ',').slice(0, 6); });
 
@@ -322,7 +323,7 @@ function datos() {
   return {
     nombre: v('nombre').replace(/\s+/g, ' ').toUpperCase(), tipoId: v('tipoId'), documento: v('documento').replace(/[^0-9A-Za-z]/g, '').toUpperCase(),
     expedicion: v('expedicion'), ciudad: v('ciudad'), direccion: v('direccion'), email: v('email').toLowerCase(), celular: soloDigitos(v('celular')),
-    numero: v('numero'), fecha: FECHA_TXT, dia: String(hoy.getDate()), mes: MESES[hoy.getMonth()], anio: String(hoy.getFullYear()),
+    numero: soloDigitos(v('numero')), fecha: FECHA_TXT, dia: String(hoy.getDate()), mes: MESES[hoy.getMonth()], anio: String(hoy.getFullYear()),
     factura: v('factura'), valorFactura: miles(v('valorFactura')),
     autorizacion: v('autorizacion'), puntoVenta: v('puntoVenta'),
     cuotas: soloDigitos(v('cuotas')), tasa: v('tasa').replace(/[^0-9.,]/g, '').replace('.', ','), folioSolicitud
